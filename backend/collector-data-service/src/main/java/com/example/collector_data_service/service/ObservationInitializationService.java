@@ -1,5 +1,6 @@
 package com.example.collector_data_service.service;
 
+import com.example.collector_data_service.domain.dto.ObservationSearchDTO;
 import com.example.collector_data_service.domain.entity.Asset;
 import com.example.collector_data_service.domain.entity.Metric;
 import com.example.collector_data_service.domain.entity.Observation;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.time.ZoneOffset;
 
 @Service
 @RequiredArgsConstructor
@@ -33,9 +35,13 @@ public class ObservationInitializationService {
 
     private static final Logger log = LoggerFactory.getLogger(ObservationInitializationService.class);
 
+    private static final String OBSERVATION_TOPIC = "observations_topic";
+
     private final AssetRepository assetRepository;
     private final MetricRepository metricRepository;
     private final ObservationRepository observationRepository;
+
+    private final KafkaProducerService kafkaProducerService;
 
     private Asset getOrCreateDefaultCityAsset() {
         String defaultAssetName = "Thành phố Đà Nẵng";
@@ -107,7 +113,11 @@ public class ObservationInitializationService {
                     }
                 }
             }
-            observationRepository.saveAll(observationsToSave);
+            List<Observation> savedObservations = observationRepository.saveAll(observationsToSave);
+
+            if (!savedObservations.isEmpty()) {
+                sendObservationsToKafka(savedObservations);
+            }
         }
         log.info("Successfully parsed {}. Processed rows: {}, Inserted observations: {}", metricName, recordsProcessed, recordsInserted);
         return new ParseResult(recordsProcessed, recordsInserted);
@@ -171,7 +181,11 @@ public class ObservationInitializationService {
                     }
                 }
             }
-            observationRepository.saveAll(observationsToSave);
+            List<Observation> savedObservations = observationRepository.saveAll(observationsToSave);
+
+            if (!savedObservations.isEmpty()) {
+                sendObservationsToKafka(savedObservations);
+            }
         }
         log.info("Successfully parsed River Water Levels. Processed rows: {}, Inserted observations: {}", recordsProcessed, recordsInserted);
         return new ParseResult(recordsProcessed, recordsInserted);
@@ -223,7 +237,11 @@ public class ObservationInitializationService {
                     }
                 }
             }
-            observationRepository.saveAll(observationsToSave);
+            List<Observation> savedObservations = observationRepository.saveAll(observationsToSave);
+
+            if (!savedObservations.isEmpty()) {
+                sendObservationsToKafka(savedObservations);
+            }
         }
         log.info("Successfully parsed Environmental Stats. Processed rows: {}, Inserted observations: {}", recordsProcessed, recordsInserted);
         return new ParseResult(recordsProcessed, recordsInserted);
@@ -274,7 +292,11 @@ public class ObservationInitializationService {
                     }
                 }
             }
-            observationRepository.saveAll(observationsToSave);
+            List<Observation> savedObservations = observationRepository.saveAll(observationsToSave);
+
+            if (!savedObservations.isEmpty()) {
+                sendObservationsToKafka(savedObservations);
+            }
         }
         log.info("Successfully parsed Disaster Damage. Processed rows: {}, Inserted observations: {}", recordsProcessed, recordsInserted);
         return new ParseResult(recordsProcessed, recordsInserted);
@@ -344,7 +366,11 @@ public class ObservationInitializationService {
                     }
                 }
             }
-            observationRepository.saveAll(observationsToSave);
+            List<Observation> savedObservations = observationRepository.saveAll(observationsToSave);
+
+            if (!savedObservations.isEmpty()) {
+                sendObservationsToKafka(savedObservations);
+            }
         }
         log.info("Successfully parsed Perennial Crops Area. Processed rows: {}, Inserted observations: {}", recordsProcessed, recordsInserted);
         return new ParseResult(recordsProcessed, recordsInserted);
@@ -414,7 +440,11 @@ public class ObservationInitializationService {
                     }
                 }
             }
-            observationRepository.saveAll(observationsToSave);
+            List<Observation> savedObservations = observationRepository.saveAll(observationsToSave);
+
+            if (!savedObservations.isEmpty()) {
+                sendObservationsToKafka(savedObservations);
+            }
         }
         log.info("Successfully parsed Perennial Crops Yield. Processed rows: {}, Inserted observations: {}", recordsProcessed, recordsInserted);
         return new ParseResult(recordsProcessed, recordsInserted);
@@ -495,7 +525,11 @@ public class ObservationInitializationService {
                     recordsInserted++;
                 }
             }
-            observationRepository.saveAll(observationsToSave);
+            List<Observation> savedObservations = observationRepository.saveAll(observationsToSave);
+
+            if (!savedObservations.isEmpty()) {
+                sendObservationsToKafka(savedObservations);
+            }
         }
         log.info("Successfully parsed Annual Production file. Processed rows: {}, Inserted observations: {}", recordsProcessed, recordsInserted);
         return new ParseResult(recordsProcessed, recordsInserted);
@@ -512,6 +546,42 @@ public class ObservationInitializationService {
         } catch (NumberFormatException e) {
             log.warn("Could not parse double value: '{}'", valueStr);
             return null;
+        }
+    }
+
+    private void sendObservationsToKafka(List<Observation> savedObservations) {
+        for (Observation obs : savedObservations) {
+            if (obs.getAsset() == null || obs.getMetric() == null) {
+                log.warn("Skipping Kafka event for Observation ID: {} due to missing Asset or Metric", obs.getId());
+                continue;
+            }
+
+            ObservationSearchDTO dto = new ObservationSearchDTO();
+            dto.setId(obs.getId().toString());
+            dto.setValue(obs.getValue());
+
+            if (obs.getRecordTime() != null) {
+                dto.setTimestamp(obs.getRecordTime().toInstant(ZoneOffset.UTC));
+            }
+
+            ObservationSearchDTO.AssetInfo assetInfo = new ObservationSearchDTO.AssetInfo();
+            assetInfo.setId(obs.getAsset().getId().toString());
+            assetInfo.setName(obs.getAsset().getName());
+            assetInfo.setAssetType(obs.getAsset().getAssetType());
+            dto.setAsset(assetInfo);
+
+            ObservationSearchDTO.MetricInfo metricInfo = new ObservationSearchDTO.MetricInfo();
+            metricInfo.setId(obs.getMetric().getId().toString());
+            metricInfo.setName(obs.getMetric().getName());
+            metricInfo.setCategory(obs.getMetric().getCategory());
+            metricInfo.setUnit(obs.getMetric().getUnit());
+            dto.setMetric(metricInfo);
+
+            kafkaProducerService.sendObservationEvent(
+                    OBSERVATION_TOPIC,
+                    "OBSERVATION_CREATED",
+                    dto
+            );
         }
     }
 }

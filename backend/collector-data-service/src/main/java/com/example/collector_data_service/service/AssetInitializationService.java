@@ -27,8 +27,11 @@ import java.util.regex.Pattern;
 public class AssetInitializationService {
     private final AssetRepository assetRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final KafkaProducerService kafkaProducerService;
 
     private static final Logger log = LoggerFactory.getLogger(AssetInitializationService.class);
+
+    private static final String ASSET_TOPIC = "assets_topic";
 
     // Danh muc cac ho ao
     @Transactional
@@ -89,7 +92,13 @@ public class AssetInitializationService {
                 asset.setAttributes(objectMapper.writeValueAsString(attributes));
 
                 if (!assetRepository.existsByName(asset.getName())) {
-                    assetRepository.save(asset);
+                    Asset savedAsset = assetRepository.save(asset);
+
+                    kafkaProducerService.sendAssetEvent(
+                            ASSET_TOPIC,
+                            "ASSET_CREATED",
+                            savedAsset
+                    );
                     recordsInserted++;
                 }
             }
@@ -155,7 +164,13 @@ public class AssetInitializationService {
                 asset.setAttributes(objectMapper.writeValueAsString(attributes));
 
                 if (!assetRepository.existsByName(asset.getName())) {
-                    assetRepository.save(asset);
+                    Asset savedAsset = assetRepository.save(asset);
+
+                    kafkaProducerService.sendAssetEvent(
+                            ASSET_TOPIC,
+                            "ASSET_CREATED",
+                            savedAsset
+                    );
                     recordsInserted++;
                 }
             }
@@ -220,7 +235,13 @@ public class AssetInitializationService {
                 asset.setAttributes(objectMapper.writeValueAsString(attributes));
 
                 if (!assetRepository.existsByName(asset.getName())) {
-                    assetRepository.save(asset);
+                    Asset savedAsset = assetRepository.save(asset);
+
+                    kafkaProducerService.sendAssetEvent(
+                            ASSET_TOPIC,
+                            "ASSET_CREATED",
+                            savedAsset
+                    );
                     recordsInserted++;
                 }
             }
@@ -282,7 +303,13 @@ public class AssetInitializationService {
                 asset.setAttributes(objectMapper.writeValueAsString(attributes));
 
                 if (!assetRepository.existsByName(asset.getName())) {
-                    assetRepository.save(asset);
+                    Asset savedAsset = assetRepository.save(asset);
+
+                    kafkaProducerService.sendAssetEvent(
+                            ASSET_TOPIC,
+                            "ASSET_CREATED",
+                            savedAsset
+                    );
                     recordsInserted++;
                 }
             }
@@ -325,7 +352,13 @@ public class AssetInitializationService {
                 asset.setAttributes(objectMapper.writeValueAsString(attributes));
 
                 if (!assetRepository.existsByName(asset.getName())) {
-                    assetRepository.save(asset);
+                    Asset savedAsset = assetRepository.save(asset);
+
+                    kafkaProducerService.sendAssetEvent(
+                            ASSET_TOPIC,
+                            "ASSET_CREATED",
+                            savedAsset
+                    );
                     recordsInserted++;
                 }
             }
@@ -368,7 +401,13 @@ public class AssetInitializationService {
                 asset.setAttributes(objectMapper.writeValueAsString(attributes));
 
                 if (!assetRepository.existsByName(asset.getName())) {
-                    assetRepository.save(asset);
+                    Asset savedAsset = assetRepository.save(asset);
+
+                    kafkaProducerService.sendAssetEvent(
+                            ASSET_TOPIC,
+                            "ASSET_CREATED",
+                            savedAsset
+                    );
                     recordsInserted++;
                 }
             }
@@ -411,7 +450,13 @@ public class AssetInitializationService {
                 asset.setAttributes(objectMapper.writeValueAsString(attributes));
 
                 if (!assetRepository.existsByName(asset.getName())) {
-                    assetRepository.save(asset);
+                    Asset savedAsset = assetRepository.save(asset);
+
+                    kafkaProducerService.sendAssetEvent(
+                            ASSET_TOPIC,
+                            "ASSET_CREATED",
+                            savedAsset
+                    );
                     recordsInserted++;
                 }
             }
@@ -459,7 +504,13 @@ public class AssetInitializationService {
                 asset.setAttributes(objectMapper.writeValueAsString(attributes));
 
                 if (!assetRepository.existsByName(asset.getName())) {
-                    assetRepository.save(asset);
+                    Asset savedAsset = assetRepository.save(asset);
+
+                    kafkaProducerService.sendAssetEvent(
+                            ASSET_TOPIC,
+                            "ASSET_CREATED",
+                            savedAsset
+                    );
                     recordsInserted++;
                 }
             }
@@ -502,7 +553,13 @@ public class AssetInitializationService {
                 asset.setAttributes(objectMapper.writeValueAsString(attributes));
 
                 if (!assetRepository.existsByName(asset.getName())) {
-                    assetRepository.save(asset);
+                    Asset savedAsset = assetRepository.save(asset);
+
+                    kafkaProducerService.sendAssetEvent(
+                            ASSET_TOPIC,
+                            "ASSET_CREATED",
+                            savedAsset
+                    );
                     recordsInserted++;
                 }
             }
