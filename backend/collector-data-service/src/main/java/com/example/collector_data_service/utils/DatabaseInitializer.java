@@ -1,5 +1,8 @@
 package com.example.collector_data_service.utils;
 
+import com.example.collector_data_service.constant.DataConstant;
+import com.example.collector_data_service.constant.FileNameConstant;
+import com.example.collector_data_service.constant.LogMessage;
 import com.example.collector_data_service.domain.entity.DataIngestionLog;
 import com.example.collector_data_service.helper.ParseResult;
 import com.example.collector_data_service.repository.AssetRepository;
@@ -32,127 +35,103 @@ public class DatabaseInitializer implements CommandLineRunner {
     private static final Logger log = LoggerFactory.getLogger(DatabaseInitializer.class);
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         try {
             if (assetRepository.count() > 0) {
-                log.info("Assets data already initialized. Skipping.");
+                log.info(LogMessage.ASSETS_ALREADY_INITIALIZED);
                 return;
             }
 
             if (observationRepository.count() > 0) {
-                log.info("Observation data already initialized. Skipping.");
+                log.info(LogMessage.OBSERVATIONS_ALREADY_INITIALIZED);
                 return;
             }
         } catch (DataAccessResourceFailureException e) {
-            log.error("DATABASE CONNECTION FAILED. Cannot proceed with data initialization.", e);
+            log.error(LogMessage.DATABASE_CONNECTION_FAILED, e);
             return;
         }
 
         final UUID runId = UUID.randomUUID();
 
         // ==== ASSET ====
-        log.info("Starting Assets initialization from CSV files...");
+        log.info(LogMessage.ASSETS_INIT_START);
 
-        safeParse(runId, "open_data/moi_truong_va_thuy_van/danh_muc_cac_ho_ao.csv", assetInitService::parseAndSavePondsAndLakes);
-        safeParse(runId, "open_data/moi_truong_va_thuy_van/danh_muc_cac_ho_thuy_loi.csv", assetInitService::parseAndSaveIrrigationLakes);
-        safeParse(runId, "open_data/moi_truong_va_thuy_van/danh_muc_song_noi_tinh.csv", assetInitService::parseAndSaveRivers);
+        safeParse(runId, FileNameConstant.ENV_PONDS_LAKES, assetInitService::parseAndSavePondsAndLakes);
+        safeParse(runId, FileNameConstant.ENV_IRRIGATION_LAKES, assetInitService::parseAndSaveIrrigationLakes);
+        safeParse(runId, FileNameConstant.ENV_RIVERS, assetInitService::parseAndSaveRivers);
 
-        safeParse(runId, "open_data/thien_tai/danh_sach_cac_khu_vuc_da_xay_ra_hien_tuong_sac_lo.csv", assetInitService::parseAndSaveLandslideAreas);
+        safeParse(runId, FileNameConstant.DISASTER_LANDSLIDES, assetInitService::parseAndSaveLandslideAreas);
 
-        safeParse(runId, "open_data/phong_chong_thien_tai/mot_so_thap_canh_bao_ngap.csv", assetInitService::parseAndSaveFloodWarningTowers);
-        safeParse(runId, "open_data/phong_chong_thien_tai/mot_so_tram_canh_bao_lu_tu_dong.csv", assetInitService::parseAndSaveAutoFloodWarningStations);
-        safeParse(runId, "open_data/phong_chong_thien_tai/mot_so_tram_do_mua_tu_dong.csv", assetInitService::parseAndSaveRainStations);
-        safeParse(runId, "open_data/phong_chong_thien_tai/thong_tin_cac_nha_tru_bao.csv", assetInitService::parseAndSaveStormShelters);
-        safeParse(runId, "open_data/phong_chong_thien_tai/tram_truc_canh_canh_bao_thien_tai_da_muc_tieu_ven_bien.csv", assetInitService::parseAndSaveCoastalWarningStations);
+        safeParse(runId, FileNameConstant.PREV_FLOOD_TOWERS, assetInitService::parseAndSaveFloodWarningTowers);
+        safeParse(runId, FileNameConstant.PREV_AUTO_FLOOD_STATIONS, assetInitService::parseAndSaveAutoFloodWarningStations);
+        safeParse(runId, FileNameConstant.PREV_RAIN_STATIONS, assetInitService::parseAndSaveRainStations);
+        safeParse(runId, FileNameConstant.PREV_STORM_SHELTERS, assetInitService::parseAndSaveStormShelters);
+        safeParse(runId, FileNameConstant.PREV_COASTAL_STATIONS, assetInitService::parseAndSaveCoastalWarningStations);
 
-        log.info("Assets initialization finished for run ID: {}", runId);
+        log.info(LogMessage.ASSETS_INIT_FINISHED, runId);
 
         // ==== OBSERVATION ====
 
-        log.info("Starting Observations initialization...");
+        log.info(LogMessage.OBSERVATIONS_INIT_START);
 
-        safeParse(runId, "open_data/moi_truong_va_thuy_van/do_am_khong_khi_trung_binh.csv",
-                is -> observationInitService.parseMonthlyCityWideMetric(is, "Độ ẩm không khí trung bình", "Thời tiết"));
+        safeParse(runId, FileNameConstant.ENV_AVG_HUMIDITY,
+                is -> observationInitService.parseMonthlyCityWideMetric(is, DataConstant.METRIC_AVG_HUMIDITY, DataConstant.CATEGORY_WEATHER));
 
-        safeParse(runId, "open_data/moi_truong_va_thuy_van/luong_mua.csv",
-                is -> observationInitService.parseMonthlyCityWideMetric(is, "Lượng mưa", "Thời tiết"));
+        safeParse(runId, FileNameConstant.ENV_RAINFALL,
+                is -> observationInitService.parseMonthlyCityWideMetric(is, DataConstant.METRIC_RAINFALL, DataConstant.CATEGORY_WEATHER));
 
-        safeParse(runId, "open_data/moi_truong_va_thuy_van/mot_so_chi_tieu_thong_ke_ve_moi_truong.csv",
+        safeParse(runId, FileNameConstant.ENV_STATS,
                 observationInitService::parseEnvironmentalStats);
 
-        safeParse(runId, "open_data/moi_truong_va_thuy_van/muc_nuoc_mot_so_song_chinh.csv",
+        safeParse(runId, FileNameConstant.ENV_RIVER_LEVELS,
                 observationInitService::parseRiverWaterLevels);
 
-        safeParse(runId, "open_data/moi_truong_va_thuy_van/nhiet_do_khong_khi_trung_binh.csv",
-                is -> observationInitService.parseMonthlyCityWideMetric(is, "Nhiệt độ không khí trung bình", "Thời tiết"));
+        safeParse(runId, FileNameConstant.ENV_AVG_TEMP,
+                is -> observationInitService.parseMonthlyCityWideMetric(is, DataConstant.METRIC_AVG_TEMP, DataConstant.CATEGORY_WEATHER));
 
-        safeParse(runId, "open_data/moi_truong_va_thuy_van/so_gio_nang.csv",
-                is -> observationInitService.parseMonthlyCityWideMetric(is, "Số giờ nắng", "Thời tiết"));
+        safeParse(runId, FileNameConstant.ENV_SUNSHINE_HOURS,
+                is -> observationInitService.parseMonthlyCityWideMetric(is, DataConstant.METRIC_SUNSHINE_HOURS, DataConstant.CATEGORY_WEATHER));
 
-        safeParse(runId, "open_data/thien_tai/thiet_hai_do_thien_tai.csv",
+        safeParse(runId, FileNameConstant.DISASTER_DAMAGE,
                 observationInitService::parseDisasterDamage);
 
-        safeParse(runId, "open_data/nong_nghiep/dien_tich_hien_co_cay_lau_nam.csv",
+        safeParse(runId, FileNameConstant.AGRI_PERENNIAL_AREA,
                 observationInitService::parsePerennialCropsArea);
 
-        safeParse(runId, "open_data/nong_nghiep/san_pham_va_san_luong_cay_lau_nam.csv",
+        safeParse(runId, FileNameConstant.AGRI_PERENNIAL_YIELD,
                 observationInitService::parsePerennialCropsYield);
 
-        String[] headersH2022 = {
-                "Tên", "Phân loại", "Đơn vị tính",
-                "Thực hiện năm 2021", "Ước tính năm 2022", "Năm 2022 so với năm 2021 (%)"
-        };
-        safeParse(runId, "open_data/nong_nghiep/san_xuat_cay_hang_nam_nam_2022.csv",
+        safeParse(runId, FileNameConstant.AGRI_ANNUAL_PROD_2022,
                 is -> observationInitService.parseAnnualProductionFile(
-                        is, headersH2022, "Tên", "Phân loại", "Đơn vị tính",
-                        "Thực hiện năm 2021", "Ước tính năm 2022"));
+                        is, DataConstant.HEADERS_H2022, DataConstant.COL_TEN, DataConstant.COL_PHAN_LOAI, DataConstant.COL_DON_VI_TINH,
+                        DataConstant.COL_THUC_HIEN_2021, DataConstant.COL_UOC_TINH_2022));
 
-        String[] headersH2023 = {
-                "Tên", "Phân loại", "Đơn vị tính",
-                "Thực hiện năm 2022", "Ước tính năm 2023", "Năm 2023 so với năm 2022 (%)"
-        };
-        safeParse(runId, "open_data/nong_nghiep/san_xuat_cay_hang_nam_nam_2023.csv",
+        safeParse(runId, FileNameConstant.AGRI_ANNUAL_PROD_2023,
                 is -> observationInitService.parseAnnualProductionFile(
-                        is, headersH2023, "Tên", "Phân loại", "Đơn vị tính",
-                        "Thực hiện năm 2022", "Ước tính năm 2023"));
+                        is, DataConstant.HEADERS_H2023, DataConstant.COL_TEN, DataConstant.COL_PHAN_LOAI, DataConstant.COL_DON_VI_TINH,
+                        DataConstant.COL_THUC_HIEN_2022, DataConstant.COL_UOC_TINH_2023));
 
-        String[] headersH2024 = {
-                "Phân loại", "Tên", "Đơn vị tính",
-                "Thực hiện năm 2023", "Ước tính năm 2024", "Năm 2024 so với năm 2023 (%)"
-        };
-        safeParse(runId, "open_data/nong_nghiep/san_xuat_cay_hang_nam_nam_2024.csv",
+        safeParse(runId, FileNameConstant.AGRI_ANNUAL_PROD_2024,
                 is -> observationInitService.parseAnnualProductionFile(
-                        is, headersH2024, "Phân loại", "Tên", "Đơn vị tính",
-                        "Thực hiện năm 2023", "Ước tính năm 2024"));
+                        is, DataConstant.HEADERS_H2024, DataConstant.COL_PHAN_LOAI, DataConstant.COL_TEN, DataConstant.COL_DON_VI_TINH,
+                        DataConstant.COL_THUC_HIEN_2023, DataConstant.COL_UOC_TINH_2024));
 
-        String[] headersL2022 = {
-                "Tên", "Phân loại", "Đơn vị tính",
-                "Thực hiện năm 2021", "Ước tính năm 2022", "Năm 2022 so với năm 2021 (%)"
-        };
-        safeParse(runId, "open_data/nong_nghiep/san_xuat_cay_lau_nam_chu_yeu_2022.csv",
+        safeParse(runId, FileNameConstant.AGRI_PERENNIAL_PROD_2022,
                 is -> observationInitService.parseAnnualProductionFile(
-                        is, headersL2022, "Tên", "Phân loại", "Đơn vị tính",
-                        "Thực hiện năm 2021", "Ước tính năm 2022"));
+                        is, DataConstant.HEADERS_L2022, DataConstant.COL_TEN, DataConstant.COL_PHAN_LOAI, DataConstant.COL_DON_VI_TINH,
+                        DataConstant.COL_THUC_HIEN_2021, DataConstant.COL_UOC_TINH_2022));
 
-        String[] headersL2023 = {
-                "Tên", "Phân loại", "Đơn vị tính",
-                "Thực hiện năm 2022", "Ước tính năm 2023", "Năm 2023 so với năm 2022 (%)"
-        };
-        safeParse(runId, "open_data/nong_nghiep/san_xuat_cay_lau_nam_chu_yeu_2023.csv",
+        safeParse(runId, FileNameConstant.AGRI_PERENNIAL_PROD_2023,
                 is -> observationInitService.parseAnnualProductionFile(
-                        is, headersL2023, "Tên", "Phân loại", "Đơn vị tính",
-                        "Thực hiện năm 2022", "Ước tính năm 2023"));
+                        is, DataConstant.HEADERS_L2023, DataConstant.COL_TEN, DataConstant.COL_PHAN_LOAI, DataConstant.COL_DON_VI_TINH,
+                        DataConstant.COL_THUC_HIEN_2022, DataConstant.COL_UOC_TINH_2023));
 
-        String[] headersL2024 = {
-                "Phân loại", "Tên", "Đơn vị tính",
-                "Thực hiện năm 2023", "Ước tính năm 2024", "Năm 2024 so với năm 2023 (%)"
-        };
-        safeParse(runId, "open_data/nong_nghiep/san_xuat_cay_lau_nam_chu_yeu_2024.csv",
+        safeParse(runId, FileNameConstant.AGRI_PERENNIAL_PROD_2024,
                 is -> observationInitService.parseAnnualProductionFile(
-                        is, headersL2024, "Phân loại", "Tên", "Đơn vị tính",
-                        "Thực hiện năm 2023", "Ước tính năm 2024"));
+                        is, DataConstant.HEADERS_L2024, DataConstant.COL_PHAN_LOAI, DataConstant.COL_TEN, DataConstant.COL_DON_VI_TINH,
+                        DataConstant.COL_THUC_HIEN_2023, DataConstant.COL_UOC_TINH_2024));
 
-        log.info("Observations initialization finished for run ID: {}", runId);
+        log.info(LogMessage.OBSERVATIONS_INIT_FINISHED, runId);
     }
 
     @FunctionalInterface
@@ -170,14 +149,14 @@ public class DatabaseInitializer implements CommandLineRunner {
 
         try (InputStream is = getClass().getClassLoader().getResourceAsStream(filePath)) {
             if (is == null) {
-                throw new java.io.FileNotFoundException("File not found in resources: " + filePath);
+                throw new java.io.FileNotFoundException(LogMessage.FILE_NOT_FOUND_IN_RESOURCES + filePath);
             }
             result = parser.process(is);
 
-            logEntry.setStatus("SUCCESS");
+            logEntry.setStatus(LogMessage.STATUS_SUCCESS);
         } catch (Exception e) {
-            log.error("Failed to parse file {}: {}", filePath, e.getMessage());
-            logEntry.setStatus("FAILED");
+            log.error(LogMessage.FILE_PARSE_FAILED, filePath, e.getMessage());
+            logEntry.setStatus(LogMessage.STATUS_FAILED);
             logEntry.setErrorMessage(e.toString());
         } finally {
             logEntry.setRecordsProcessed(result.getRecordsProcessed());

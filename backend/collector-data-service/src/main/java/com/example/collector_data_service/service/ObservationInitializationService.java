@@ -1,5 +1,6 @@
 package com.example.collector_data_service.service;
 
+import com.example.collector_data_service.constant.LogMessage;
 import com.example.collector_data_service.domain.entity.Asset;
 import com.example.collector_data_service.domain.entity.Metric;
 import com.example.collector_data_service.domain.entity.Observation;
@@ -510,7 +511,7 @@ public class ObservationInitializationService {
 
             return Double.parseDouble(sanitizedString);
         } catch (NumberFormatException e) {
-            log.warn("Could not parse double value: '{}'", valueStr);
+            log.warn(LogMessage.LOAD_DOUBLE_FAIL, valueStr);
             return null;
         }
     }

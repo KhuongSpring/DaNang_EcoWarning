@@ -1,12 +1,12 @@
 package com.example.collector_data_service.domain.entity;
 
-import com.vladmihalcea.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "assets")
@@ -36,7 +36,7 @@ public class Asset {
 
     Double longitude;
 
-    @Type(JsonType.class)
-    @Column(columnDefinition = "json")
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
     String attributes;
 }
