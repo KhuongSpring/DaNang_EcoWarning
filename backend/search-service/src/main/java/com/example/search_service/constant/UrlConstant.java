@@ -13,7 +13,8 @@ public class UrlConstant {
         public static final String COUNT_TYPE = PREFIX + "/count-type";
         public static final String DISASTER_DAMAGE_BY_YEAR = PREFIX + "/disaster-damage/by-year";
         public static final String DISASTER_DAMAGE_DETAIL = PREFIX + "/disaster-damage/detail";
-        public static final String AGRICULTURE_SUMMARY_BY_YEAR = PREFIX + "/agriculture/summary-by-year";
+        public static final String AGRICULTURE_SEARCH = PREFIX + "/agriculture/search";
+        public static final String AGRICULTURE_FILTER = PREFIX + "/agriculture/filters";
 
     }
 

@@ -10,6 +10,10 @@ import lombok.NoArgsConstructor;
 public class MetricYearlySummaryDTO {
 
     private String metricName;
+
     private Integer year;
+
     private Double totalValue;
+
+    private String unit;
 }

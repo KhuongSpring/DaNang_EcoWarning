@@ -46,13 +46,25 @@ public class StatisticsController {
     }
 
     @Operation(
-            summary = "Lấy thông tin chi tiết về nông nghiệp theo đơn vị tính",
-            description = "Lấy thông tin chi tiết về nông nghiệp theo đơn vị tính"
+            summary = "Lấy thông tin về nông nghiệp dựa theo tiêu chí tìm kiếm",
+            description = "Lấy thông tin về nông nghiệp dựa theo tiêu chí tìm kiếm"
     )
-    @GetMapping(UrlConstant.Static.AGRICULTURE_SUMMARY_BY_YEAR)
-    public ResponseEntity<?> getAgricultureSummary(
-            @RequestParam(defaultValue = "ĐVT: Ha / Ha / Tạ/Ha / Tấn") String unit
+    @GetMapping(UrlConstant.Static.AGRICULTURE_SEARCH)
+    public ResponseEntity<?> searchAgriculture(
+            @RequestParam(required = false) String unit,
+            @RequestParam(required = false) String crop,
+            @RequestParam(required = false) String aspect
     ) {
-        return VsResponseUtil.success(statisticsService.getAgricultureSummaryByUnit(unit));
+        return VsResponseUtil.success(statisticsService.searchAgricultureSummary(unit, crop, aspect));
+    }
+
+
+    @Operation(
+            summary = "Lấy thông tin về các tiêu chí tìm kiếm về nông nghiệp",
+            description = "Lấy thông tin về các tiêu chí tìm kiếm về nông nghiệp"
+    )
+    @GetMapping(UrlConstant.Static.AGRICULTURE_FILTER)
+    public ResponseEntity<?> getAgricultureFilters() {
+        return VsResponseUtil.success(statisticsService.getAgricultureFilterOptions());
     }
 }

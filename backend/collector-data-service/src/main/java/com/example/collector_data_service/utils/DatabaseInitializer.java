@@ -149,13 +149,13 @@ public class DatabaseInitializer implements CommandLineRunner {
 
         try (InputStream is = getClass().getClassLoader().getResourceAsStream(filePath)) {
             if (is == null) {
-                throw new java.io.FileNotFoundException(LogMessage.FILE_NOT_FOUND_IN_RESOURCES + filePath);
+                throw new java.io.FileNotFoundException(LogMessage.ERR_FILE_NOT_FOUND_IN_RESOURCES + filePath);
             }
             result = parser.process(is);
 
             logEntry.setStatus(LogMessage.STATUS_SUCCESS);
         } catch (Exception e) {
-            log.error(LogMessage.FILE_PARSE_FAILED, filePath, e.getMessage());
+            log.error(LogMessage.ERR_FILE_PARSE_FAILED, filePath, e.getMessage());
             logEntry.setStatus(LogMessage.STATUS_FAILED);
             logEntry.setErrorMessage(e.toString());
         } finally {

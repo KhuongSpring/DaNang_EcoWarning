@@ -2,7 +2,8 @@ package com.example.collector_data_service.constant;
 
 public class DataConstant {
 
-    private DataConstant() {}
+    private DataConstant() {
+    }
 
     public static final String METRIC_AVG_HUMIDITY = "Độ ẩm không khí trung bình";
     public static final String METRIC_RAINFALL = "Lượng mưa";

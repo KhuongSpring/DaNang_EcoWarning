@@ -26,7 +26,8 @@ public class AssetListDTO {
 
         try {
             if (asset.getAttributes() != null && !asset.getAttributes().isEmpty()) {
-                this.attributes = objectMapper.readValue(asset.getAttributes(), new TypeReference<>() {});
+                this.attributes = objectMapper.readValue(asset.getAttributes(), new TypeReference<>() {
+                });
             }
         } catch (Exception e) {
             this.attributes = Map.of("error", "Failed to parse attributes");

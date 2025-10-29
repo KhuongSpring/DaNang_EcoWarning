@@ -7,24 +7,24 @@ import org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchDa
 import org.springframework.core.env.Environment;
 
 @SpringBootApplication(
-		exclude = { ElasticsearchDataAutoConfiguration.class }
+        exclude = {ElasticsearchDataAutoConfiguration.class}
 )
 @Slf4j
 public class SearchServiceApplication {
 
-	public static void main(String[] args) {
-		Environment env = SpringApplication.run(SearchServiceApplication.class, args).getEnvironment();
-		String appName = env.getProperty("spring.application.name");
-		if (appName != null) {
-			appName = appName.toUpperCase();
-		}
-		String port = env.getProperty("server.port");
-		log.info("-------------------------START " + appName
-				+ " Application------------------------------");
-		log.info("   Application         : " + appName);
-		log.info("   Url swagger-ui      : http://localhost:" + port + "/swagger-ui.html");
-		log.info("-------------------------START SUCCESS " + appName
-				+ " Application------------------------------");
-	}
+    public static void main(String[] args) {
+        Environment env = SpringApplication.run(SearchServiceApplication.class, args).getEnvironment();
+        String appName = env.getProperty("spring.application.name");
+        if (appName != null) {
+            appName = appName.toUpperCase();
+        }
+        String port = env.getProperty("server.port");
+        log.info("-------------------------START " + appName
+                + " Application------------------------------");
+        log.info("   Application         : " + appName);
+        log.info("   Url swagger-ui      : http://localhost:" + port + "/swagger-ui.html");
+        log.info("-------------------------START SUCCESS " + appName
+                + " Application------------------------------");
+    }
 
 }

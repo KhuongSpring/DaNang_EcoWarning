@@ -1,4 +1,5 @@
 package com.example.search_service.repository;
+
 import com.example.search_service.domain.dto.MetricValueDTO;
 import com.example.search_service.domain.dto.response.MetricYearlySummaryDTO;
 import com.example.search_service.domain.dto.response.YearlySummaryDTO;
@@ -10,7 +11,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.UUID;
 
 @Repository
 public interface ObservationSearchRepository extends JpaRepository<Observation, Long>, JpaSpecificationExecutor<Observation> {
@@ -53,17 +53,22 @@ public interface ObservationSearchRepository extends JpaRepository<Observation, 
     );
 
     @Query("SELECT new com.example.search_service.domain.dto.response.MetricYearlySummaryDTO(" +
-            "    m.name, " +
-            "    YEAR(o.recordTime), " +
-            "    SUM(o.value)" +
+            "m.name, " +
+            "YEAR(o.recordTime), " +
+            "SUM(o.value), " +
+            "m.unit" +
             ") " +
-            "FROM Observation o " +
-            "JOIN o.metric m " +
-            "WHERE m.category = :category AND m.unit = :unit " +
-            "GROUP BY m.name, YEAR(o.recordTime) " + // Nhóm theo cả 2
+            "FROM Observation o JOIN o.metric m " +
+            "WHERE m.category = :category " +
+            "AND m.unit LIKE :unit " +
+            "AND m.name LIKE :crop " +
+            "AND m.name LIKE :aspect " +
+            "GROUP BY m.name, YEAR(o.recordTime), m.unit " +
             "ORDER BY m.name ASC, YEAR(o.recordTime) ASC")
-    List<MetricYearlySummaryDTO> getYearlySummaryByMetricAndYear(
+    List<MetricYearlySummaryDTO> searchAgricultureSummary(
             @Param("category") String category,
-            @Param("unit") String unit
+            @Param("unit") String unit,
+            @Param("crop") String crop,
+            @Param("aspect") String aspect
     );
 }

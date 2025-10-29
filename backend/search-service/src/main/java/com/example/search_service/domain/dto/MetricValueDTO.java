@@ -1,6 +1,5 @@
 package com.example.search_service.domain.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

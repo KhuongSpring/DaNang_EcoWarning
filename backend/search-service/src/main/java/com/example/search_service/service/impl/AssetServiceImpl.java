@@ -1,24 +1,24 @@
 package com.example.search_service.service.impl;
 
+import com.example.search_service.constant.ErrorMessage;
 import com.example.search_service.domain.dto.LatestObservationDTO;
 import com.example.search_service.domain.dto.response.AssetListDTO;
 import com.example.search_service.domain.dto.response.AssetMapDTO;
 import com.example.search_service.domain.dto.response.AssetProfileDTO;
 import com.example.search_service.domain.entity.Asset;
 import com.example.search_service.domain.entity.Observation;
+import com.example.search_service.exception.VsException;
 import com.example.search_service.repository.AssetSearchRepository;
 import com.example.search_service.repository.ObservationSearchRepository;
 import com.example.search_service.service.AssetService;
 import com.example.search_service.util.AssetSpecification;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,7 +58,7 @@ public class AssetServiceImpl implements AssetService {
     public AssetProfileDTO getAssetProfile(Long assetId) {
 
         Asset asset = assetRepository.findById(assetId)
-                .orElseThrow(() -> new EntityNotFoundException("Asset not found with id: " + assetId));
+                .orElseThrow(() -> new VsException(ErrorMessage.ERR_ASSET_NOT_FOUND + assetId));
 
         List<Observation> latestObs = observationRepository.findLatestObservationsForAsset(assetId);
 

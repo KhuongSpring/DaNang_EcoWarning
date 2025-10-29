@@ -2,6 +2,7 @@ package com.example.search_service.domain.dto;
 
 import com.example.search_service.domain.entity.Observation;
 import lombok.Data;
+
 import java.time.LocalDateTime;
 
 @Data

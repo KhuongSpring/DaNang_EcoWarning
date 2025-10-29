@@ -2,7 +2,8 @@ package com.example.collector_data_service.constant;
 
 public class FileNameConstant {
 
-    private FileNameConstant() {}
+    private FileNameConstant() {
+    }
 
     private static final String ENV_HYDRO_PATH = "open_data/moi_truong_va_thuy_van/";
     private static final String DISASTER_PATH = "open_data/thien_tai/";

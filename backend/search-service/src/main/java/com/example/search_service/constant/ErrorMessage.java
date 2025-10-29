@@ -5,4 +5,6 @@ public class ErrorMessage {
     public static final String UNAUTHORIZED = "exception.unauthorized";
     public static final String FORBIDDEN = "exception.forbidden";
     public static final String BAD_REQUEST = "exception.bad.request";
+
+    public static final String ERR_ASSET_NOT_FOUND = "Asset not found with id: ";
 }
