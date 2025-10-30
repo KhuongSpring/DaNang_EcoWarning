@@ -3,7 +3,6 @@ package com.example.search_service.controller;
 import com.example.search_service.base.RestApiV1;
 import com.example.search_service.base.VsResponseUtil;
 import com.example.search_service.constant.UrlConstant;
-import com.example.search_service.domain.dto.response.AssetProfileDTO;
 import com.example.search_service.service.AssetService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;

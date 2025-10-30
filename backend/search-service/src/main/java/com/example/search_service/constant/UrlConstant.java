@@ -18,4 +18,11 @@ public class UrlConstant {
 
     }
 
+    public static class Metric {
+        public static final String PREFIX = "/metric";
+        public static final String GET_METRIC_BY_ASSET_ID = PREFIX + "/by-asset/{assetId}";
+        public static final String GET_HISTORY_OF_METRIC= PREFIX + "/history";
+
+    }
+
 }
