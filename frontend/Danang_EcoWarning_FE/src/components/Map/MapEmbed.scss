@@ -1,0 +1,26 @@
+@import "../../styles/variables.scss";
+
+.map-embed-container {
+  width: 100%;
+  // Chiều cao quan trọng, ví dụ 500px hoặc 60vh
+  height: 60vh;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid $border-color; // Viền nhẹ
+  position: relative; // Cần cho control
+}
+
+// Style marker giữ nguyên như cũ trong _map.scss hoặc chuyển vào đây
+.marker-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  span {
+    font-size: 1.8rem;
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+  }
+  &.marker-danger span {
+    color: #dc3545;
+  }
+}

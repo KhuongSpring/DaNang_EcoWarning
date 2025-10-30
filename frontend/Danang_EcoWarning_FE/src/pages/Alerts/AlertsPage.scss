@@ -1,0 +1,66 @@
+@import "../../styles/variables";
+
+.alerts-page {
+  h1 {
+    margin-bottom: 0.5rem;
+  }
+  > p {
+    margin-bottom: 2rem;
+    font-size: 1rem;
+    color: $secondary-color;
+  }
+}
+
+.alert-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.alert-item {
+  display: flex;
+  background-color: $bg-content;
+  border-left: 5px solid $secondary-color;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    padding: 1.5rem;
+    background-color: $secondary-color;
+    color: $text-light;
+  }
+
+  &__content {
+    padding: 1.5rem;
+    flex: 1;
+
+    h3 {
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  &--warning {
+    border-color: $warning-color;
+    .alert-item__icon {
+      background-color: $warning-color;
+    }
+  }
+
+  &--danger {
+    border-color: $danger-color;
+    .alert-item__icon {
+      background-color: $danger-color;
+    }
+  }
+
+  &--info {
+    border-color: $info-color;
+    .alert-item__icon {
+      background-color: $info-color;
+    }
+  }
+}

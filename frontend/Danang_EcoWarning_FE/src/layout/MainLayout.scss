@@ -1,0 +1,16 @@
+@import "../../src/styles/variables.scss";
+
+.main-layout-new {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content-new {
+  flex: 1;
+  padding: 1.5rem;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  background-color: $bg-content;
+}
