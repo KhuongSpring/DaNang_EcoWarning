@@ -1,0 +1,78 @@
+// src/styles/components/_profile-panel.scss
+@import "../../styles/abstracts/variables";
+
+.profile-panel {
+  width: 400px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  right: 0;
+  background-color: $bg-secondary;
+  box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
+  transform: translateX(100%); // Ẩn mặc định
+  transition: transform 0.3s ease-in-out;
+  z-index: 1010;
+  padding: 20px;
+  overflow-y: auto;
+
+  &.open {
+    transform: translateX(0); // Hiện
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: $text-secondary;
+  }
+
+  .profile-content {
+    margin-top: 40px;
+
+    h3 {
+      font-size: 1.5rem;
+      color: $text-primary;
+      margin-bottom: 5px;
+    }
+    .asset-type {
+      font-size: 1rem;
+      color: $primary-color;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+
+    .profile-section {
+      margin-bottom: 25px;
+      h4 {
+        border-bottom: 1px solid $border-color;
+        padding-bottom: 5px;
+        margin-bottom: 10px;
+        color: $text-primary;
+      }
+    }
+
+    .profile-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+
+      span {
+        color: $text-secondary;
+        text-transform: capitalize;
+      }
+      strong {
+        color: $text-primary;
+        text-align: right;
+      }
+    }
+    .latest-data strong {
+      color: $primary-color;
+      font-weight: 700;
+    }
+  }
+}

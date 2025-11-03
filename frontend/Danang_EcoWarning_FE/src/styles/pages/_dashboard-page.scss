@@ -1,0 +1,77 @@
+// src/styles/pages/_dashboard-page.scss
+@import "../components/charts";
+
+.dashboard-page {
+  .dashboard-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: $text-primary;
+    margin-bottom: 2rem;
+  }
+
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr); // Vẫn là 12 cột
+    gap: 24px;
+  }
+
+  // --- XÓA CÁC ĐỊNH NGHĨA .chart-container- CŨ ---
+  // .chart-container-small { ... }
+  // .chart-container-medium { ... }
+  // .chart-container-large { ... }
+
+  // --- THÊM CÁC CLASS COL-SPAN MỚI ---
+  .col-span-4 {
+    grid-column: span 12; // Mặc định trên mobile
+    @media (min-width: 1024px) {
+      grid-column: span 4 / span 4;
+    }
+  }
+
+  .col-span-5 {
+    grid-column: span 12;
+    @media (min-width: 1024px) {
+      grid-column: span 7 / span 7;
+    }
+  }
+
+  .col-span-7 {
+    grid-column: span 12;
+    @media (min-width: 1024px) {
+      grid-column: span 5 / span 5;
+    }
+  }
+
+  .col-span-8 {
+    grid-column: span 12;
+    @media (min-width: 1024px) {
+      grid-column: span 8 / span 8;
+    }
+  }
+  .col-span-12 {
+    grid-column: span 12 / span 12;
+  }
+  // -----------------------
+
+  .chart-container {
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+    .recharts-responsive-container {
+      flex-grow: 1;
+    }
+  }
+  // ------------------------------------
+
+  // Đảm bảo các chart-container có chiều cao tối thiểu
+  .chart-container {
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+
+    // Cho phép ResponsiveContainer co giãn
+    .recharts-responsive-container {
+      flex-grow: 1;
+    }
+  }
+}

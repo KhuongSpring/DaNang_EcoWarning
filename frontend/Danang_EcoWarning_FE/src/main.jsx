@@ -1,12 +1,15 @@
+// src/main.jsx
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
-// Import tệp SCSS tổng của bạn
-import "@goongmaps/goong-js/dist/goong-js.css";
-import "../src/styles/main.scss";
+import App from "./App.jsx";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
+// Import CSS của Goong Maps (Rất quan trọng)
+import "@goongmaps/goong-js/dist/goong-js.css";
+
+// Import file SASS chính
+import "./styles/main.scss";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>

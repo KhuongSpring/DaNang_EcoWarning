@@ -1,0 +1,63 @@
+// src/styles/components/_charts.scss
+@import "../../styles/abstracts/variables";
+
+.chart-container {
+  background-color: $bg-secondary; // White
+  border: 1px solid $border-color;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0 2px 4px -1px rgba(0, 0, 0, 0.03);
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $text-primary;
+    margin-bottom: 5px;
+  }
+
+  .chart-subtitle {
+    font-size: 0.875rem;
+    color: $text-secondary;
+    margin-top: 0;
+    margin-bottom: 15px;
+  }
+
+  // Cấu hình Recharts cho đẹp
+  .recharts-responsive-container {
+    // Đảm bảo container không bị tràn
+    width: 100% !important;
+    height: 100% !important;
+  }
+  .recharts-legend-item-text {
+    color: $text-secondary !important;
+  }
+  .recharts-cartesian-axis-tick-value {
+    fill: $text-secondary !important;
+    font-size: 0.8rem;
+  }
+}
+.custom-asset-tooltip {
+  /*
+    Recharts thường định vị tooltip ngay bên trên con trỏ.
+    Bằng cách thêm 'margin-bottom', bạn đang đẩy nó "cao lên" 
+    thêm 30px so với vị trí mặc định của nó.
+    
+    Hãy điều chỉnh giá trị 30px này cho đến khi bạn thấy vừa ý.
+  */
+  margin-bottom: 30px;
+
+  /* Lưu ý: Bạn cũng có thể dùng 'transform' nếu muốn, 
+    nhưng nó có thể xung đột với transform có sẵn của Recharts.
+    'margin-bottom' thường an toàn hơn.
+  */
+  // transform: translateY(-30px); // (Cách này có thể ghi đè)
+}
+.recharts-wrapper,
+.recharts-responsive-container {
+  &:focus,
+  &:focus-visible,
+  &:focus-within {
+    outline: none !important; // Tắt đường viền
+  }
+}

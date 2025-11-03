@@ -1,0 +1,61 @@
+// src/styles/components/_damage-detail-panel.scss
+@import "../abstracts/variables";
+
+// Dùng chung .chart-container (đã có)
+
+.detail-panel-container {
+  h3 {
+    margin-bottom: 20px;
+  }
+  .detail-list {
+    max-height: 250px; // Chiều cao tối đa, khớp với biểu đồ
+    overflow-y: auto; // Thêm thanh cuộn nếu cần
+
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 5px; // Thêm padding
+      border-bottom: 1px solid $border-color;
+
+      span {
+        color: $text-secondary;
+        padding-right: 10px;
+        font-size: 0.9rem;
+      }
+      strong {
+        color: $primary-color;
+        font-weight: 600;
+        white-space: nowrap; // Không xuống dòng
+      }
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+}
+
+// Style cho placeholder
+.detail-panel-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%; // Chiếm toàn bộ chiều cao
+  min-height: 300px; // Chiều cao tối thiểu
+
+  .placeholder-content {
+    text-align: center;
+    color: $text-secondary;
+
+    svg {
+      color: $border-color;
+      margin-bottom: 15px;
+    }
+
+    p {
+      font-size: 0.95rem;
+      max-width: 250px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+  }
+}
