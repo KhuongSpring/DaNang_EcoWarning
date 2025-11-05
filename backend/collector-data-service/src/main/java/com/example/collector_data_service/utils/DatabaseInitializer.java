@@ -101,6 +101,9 @@ public class DatabaseInitializer implements CommandLineRunner {
         safeParse(runId, FileNameConstant.AGRI_PERENNIAL_YIELD,
                 observationInitService::parsePerennialCropsYield);
 
+        safeParse(runId, FileNameConstant.ENV_YEAR_OVER_YEAR_WATER_LEVEL,
+                observationInitService::parseYearOverYearWaterLevel);
+
         safeParse(runId, FileNameConstant.AGRI_ANNUAL_PROD_2022,
                 is -> observationInitService.parseAnnualProductionFile(
                         is, DataConstant.HEADERS_H2022, DataConstant.COL_TEN, DataConstant.COL_PHAN_LOAI, DataConstant.COL_DON_VI_TINH,
