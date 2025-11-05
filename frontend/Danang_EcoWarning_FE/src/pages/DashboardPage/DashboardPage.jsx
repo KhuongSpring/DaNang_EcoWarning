@@ -1,4 +1,4 @@
-// src/pages/DashboardPage.jsx
+
 import React, { useState } from "react";
 import AssetTypeChart from "../../components/dashboard/AssetTypeChart";
 import DamageChart from "../../components/dashboard/DamageChart";

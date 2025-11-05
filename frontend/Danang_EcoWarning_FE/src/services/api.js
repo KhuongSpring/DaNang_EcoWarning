@@ -1,7 +1,9 @@
 // src/services/api.js
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:8082/api/v1"; // Thay bằng URL của bạn
+const API_BASE_URL = "http://localhost:8082/api/v1";
+const OPENWEATHER_API_KEY = "eab7f1f79ea231f5fbd1e3c427c8f527";
+const OPENWEATHER_BASE_URL = "https://api.openweathermap.org/data/2.5";
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -80,4 +82,64 @@ export const getAgricultureFilters = () => {
     .get("/static/agriculture/filters")
     .then(handleResponse)
     .catch(handleError);
+};
+
+// Hàm gọi API thời tiết hiện tại
+export const getCurrentWeather = async (lat, lon) => {
+  const url = `${OPENWEATHER_BASE_URL}/weather?lat=16.054407&lon=108.202164`;
+  try {
+    const response = await axios.get(url, {
+      params: {
+        lat: lat,
+        lon: lon,
+        appid: OPENWEATHER_API_KEY,
+        units: "metric", // Lấy Độ C
+        lang: "vi", // Lấy tiếng Việt
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Lỗi khi lấy thời tiết hiện tại:", error);
+    throw error;
+  }
+};
+
+// Hàm gọi API dự báo 5 ngày / 3 giờ
+export const getForecastWeather = async (lat, lon) => {
+  const url = `${OPENWEATHER_BASE_URL}/forecast?lat=16.054407&lon=108.202164`;
+  try {
+    const response = await axios.get(url, {
+      params: {
+        lat: lat,
+        lon: lon,
+        appid: OPENWEATHER_API_KEY,
+        units: "metric",
+        lang: "vi",
+      },
+    });
+    // Trả về cả danh sách và thông tin thành phố
+    return { list: response.data.list, city: response.data.city };
+  } catch (error) {
+    console.error("Lỗi khi lấy dự báo:", error);
+    throw error;
+  }
+};
+
+// Hàm gọi API ô nhiễm không khí
+export const getAirPollution = async (lat, lon) => {
+  const url = `${OPENWEATHER_BASE_URL}/air_pollution?lat=16.054407&lon=108.202164`;
+  try {
+    const response = await axios.get(url, {
+      params: {
+        lat: lat,
+        lon: lon,
+        appid: OPENWEATHER_API_KEY,
+      },
+    });
+    // Trả về mục đầu tiên trong danh sách
+    return response.data.list[0];
+  } catch (error) {
+    console.error("Lỗi khi lấy dữ liệu ô nhiễm:", error);
+    throw error;
+  }
 };

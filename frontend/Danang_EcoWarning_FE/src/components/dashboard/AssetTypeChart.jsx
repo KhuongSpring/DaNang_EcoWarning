@@ -10,7 +10,6 @@ import {
 } from "recharts";
 import { getAssetCountByType } from "../../services/api";
 
-// Màu sắc cho biểu đồ (lấy từ V0)
 const COLORS = [
   "#3b82f6",
   "#10b981",
@@ -26,7 +25,6 @@ const AssetTypeChart = () => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await getAssetCountByType();
-      // Chuyển đổi data cho Recharts
       const chartData = result.map((item) => ({
         name: item.assetType,
         value: item.count,

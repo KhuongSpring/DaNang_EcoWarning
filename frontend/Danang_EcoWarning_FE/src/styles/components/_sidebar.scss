@@ -1,5 +1,3 @@
-// src/styles/components/_sidebar.scss
-
 $sidebar-width-collapsed: 80px;
 $sidebar-width-expanded: 250px;
 $primary-color: #3498db;
@@ -13,23 +11,22 @@ $text-color: #ecf0f1;
   top: 0;
   left: 0;
   transition: width 0.3s ease;
-  overflow: hidden; 
+  overflow: hidden;
   z-index: 1000;
 
   .sidebar-logo {
     display: flex;
-    justify-content: center; 
+    justify-content: center;
     align-items: center;
-    padding: 20px 0; 
-    margin-bottom: 10px; 
-
+    padding: 20px 0;
+    margin-bottom: 10px;
 
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
     img {
-      width: 100px; 
+      width: 100px;
       height: auto;
-      max-width: 100%;  
+      max-width: 100%;
     }
   }
 
@@ -45,32 +42,30 @@ $text-color: #ecf0f1;
     padding: 15px 25px;
     color: $text-color;
     text-decoration: none;
-    white-space: nowrap; // Ngăn văn bản xuống dòng
+    white-space: nowrap;
 
     .sidebar-icon {
       font-size: 1.8rem;
-      min-width: 30px; // Giữ icon ở vị trí
+      min-width: 30px;
     }
 
     .sidebar-text {
       margin-left: 20px;
       font-size: 1rem;
-      opacity: 0; // Ẩn văn bản mặc định
+      opacity: 0;
       transition: opacity 0.2s ease;
     }
 
-    // Hiệu ứng active
     &.active {
       background-color: lighten($primary-color, 10%);
     }
   }
 
-  // Phép thuật SASS xảy ra ở đây
   &:hover {
     width: $sidebar-width-expanded;
 
     .sidebar-text {
-      opacity: 1; // Hiện văn bản khi hover vào sidebar
+      opacity: 1;
     }
   }
 }

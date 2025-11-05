@@ -31,20 +31,16 @@ const DamageChart = ({ onBarClick }) => {
     fetchData();
   }, []);
 
-  // --- THAY ĐỔI HÀM NÀY ---
   const handleChartClick = (chartData) => {
-    // 'activeLabel' là nhãn trên trục X (ví dụ: "2020")
-    // mà con trỏ chuột đang ở trên.
+
     if (chartData && chartData.activeLabel) {
-      const year = chartData.activeLabel; // Lấy năm trực tiếp từ activeLabel
+      const year = chartData.activeLabel; 
 
       if (year) {
-        onBarClick(year); // Gọi hàm của cha với năm (year)
+        onBarClick(year); 
       }
     }
   };
-  // --- KẾT THÚC THAY ĐỔI ---
-
   return (
     <ResponsiveContainer width="100%" height={250}>
       <BarChart

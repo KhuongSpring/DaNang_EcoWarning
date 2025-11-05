@@ -37,7 +37,6 @@ const parseMetricName = (metricName, cropsList, aspectsList) => {
 };
 
 const AgricultureChart = () => {
-  // (State giữ nguyên...)
   const [selectedCrop, setSelectedCrop] = useState("");
   const [selectedAspect, setSelectedAspect] = useState("");
   const [selectedUnit, setSelectedUnit] = useState("");
@@ -48,7 +47,6 @@ const AgricultureChart = () => {
   const [unitOptions, setUnitOptions] = useState([]);
   const [chartData, setChartData] = useState([]);
 
-  // --- 1. useEffect: Tải và Phân tích Dữ liệu ---
   useEffect(() => {
     const initialize = async () => {
       try {
@@ -60,8 +58,6 @@ const AgricultureChart = () => {
         const masterLists = filterResponse;
         const allData = dataResponse;
         setRawData(allData);
-
-        // (Logic xây dựng dataMap giữ nguyên...)
         const newMap = new Map();
         allData.forEach((item) => {
           const { metricName, unit } = item;
@@ -83,20 +79,18 @@ const AgricultureChart = () => {
         const allCrops = Array.from(newMap.keys()).sort();
         setCropOptions(allCrops);
 
-        // --- THAY ĐỔI 1: TỰ ĐỘNG CHỌN CÂY TRỒNG ĐẦU TIÊN ---
         if (allCrops.length > 0) {
-          setSelectedCrop(allCrops[0]); // Kích hoạt cascade
+          setSelectedCrop(allCrops[0]); 
         }
-        // --------------------------------------------------
+
       } catch (error) {
         console.error("Lỗi khi khởi tạo dữ liệu nông nghiệp:", error);
       }
     };
 
     initialize();
-  }, []); // Mảng rỗng = chạy 1 lần
+  }, []); 
 
-  // --- 2. Xử lý khi CÂY TRỒNG (Crop) thay đổi ---
   useEffect(() => {
     if (!selectedCrop || !dataMap.has(selectedCrop)) {
       setAspectOptions([]);
@@ -109,19 +103,14 @@ const AgricultureChart = () => {
     const validAspects = Array.from(aspectMap.keys()).sort();
     setAspectOptions(validAspects);
 
-    // --- THAY ĐỔI 2: TỰ ĐỘNG CHỌN TIÊU CHÍ ĐẦU TIÊN ---
-    // (Thay vì setSelectedAspect("") )
     if (validAspects.length > 0) {
-      setSelectedAspect(validAspects[0]); // Kích hoạt cascade tiếp theo
+      setSelectedAspect(validAspects[0]); 
     } else {
       setSelectedAspect("");
     }
-    // ------------------------------------------------
-    setSelectedUnit(""); // (Vẫn reset unit)
+    setSelectedUnit(""); 
   }, [selectedCrop, dataMap]);
 
-  // --- 3. Xử lý khi TIÊU CHÍ (Aspect) thay đổi ---
-  // (Giữ nguyên - nó đã tự động chọn unit đầu tiên)
   useEffect(() => {
     if (
       !selectedCrop ||
@@ -139,9 +128,6 @@ const AgricultureChart = () => {
     if (validUnits.length > 0) setSelectedUnit(validUnits[0]);
     else setSelectedUnit("");
   }, [selectedCrop, selectedAspect, dataMap]);
-
-  // --- 4. Xử lý khi BỘ BA (Triplet) hoàn chỉnh -> Lọc và Vẽ Biểu đồ ---
-  // (Giữ nguyên)
   useEffect(() => {
     if (!selectedCrop || !selectedAspect || !selectedUnit) {
       setChartData([]);
@@ -162,12 +148,9 @@ const AgricultureChart = () => {
     );
   }, [selectedCrop, selectedAspect, selectedUnit, rawData]);
 
-  // --- RENDER ---
-  // (Phần render JSX giữ nguyên)
   return (
     <>
       <div className="chart-filters-container">
-        {/* 1. BỘ LỌC CÂY TRỒNG */}
         <div className="filter-group">
           <label htmlFor="crop-select">Cây trồng:</label>
           <select
@@ -183,8 +166,6 @@ const AgricultureChart = () => {
             ))}
           </select>
         </div>
-
-        {/* 2. BỘ LỌC TIÊU CHÍ */}
         <div className="filter-group">
           <label htmlFor="aspect-select">Tiêu chí:</label>
           <select
@@ -201,8 +182,6 @@ const AgricultureChart = () => {
             ))}
           </select>
         </div>
-
-        {/* 3. BỘ LỌC ĐƠN VỊ */}
         <div className="filter-group">
           <label htmlFor="unit-select">Đơn vị:</label>
           <select
@@ -220,8 +199,6 @@ const AgricultureChart = () => {
           </select>
         </div>
       </div>
-
-      {/* --- BIỂU ĐỒ --- */}
       <ResponsiveContainer width="100%" height={250}>
         <LineChart
           data={chartData}

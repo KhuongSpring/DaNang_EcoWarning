@@ -1,4 +1,4 @@
-// src/styles/components/_profile-panel.scss
+
 @import "../../styles/abstracts/variables";
 
 .profile-panel {
@@ -9,7 +9,7 @@
   right: 0;
   background-color: $bg-secondary;
   box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
-  transform: translateX(100%); // Ẩn mặc định
+  transform: translateX(100%); 
   transition: transform 0.3s ease-in-out;
   z-index: 1010;
   padding: 20px;
