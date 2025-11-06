@@ -1,4 +1,4 @@
-// src/styles/pages/_map-page.scss
+
 @import "../abstracts/variables";
 
 .map-page-layout {
@@ -23,7 +23,6 @@
       background: transparent;
       padding: 10px 15px;
       border-radius: 8px;
-      //   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
       label {
         margin-right: 10px;
@@ -38,16 +37,12 @@
     }
   }
 
-  // Khi ProfilePanel mở, dịch chuyển MapPage
   &.profile-open .map-container {
-    margin-right: 400px; // Bằng chiều rộng của panel
+    margin-right: 400px; 
   }
   .custom-marker {
-    // Kích thước của icon
     width: 32px;
     height: 32px;
-
-    // Đảm bảo ảnh icon vừa vặn
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -56,14 +51,10 @@
     transition: transform 0.1s ease-in-out;
 
     &:hover {
-      transform: scale(1.1); // Phóng to nhẹ khi hover
+      transform: scale(1.1); 
     }
   }
   .react-icon-marker {
-    // Bạn không cần set width/height,
-    // vì react-icon tự có kích thước (từ fontSize)
-
-    // Chỉ cần thêm 2 dòng này:
     display: flex;
     align-items: center;
     justify-content: center;
@@ -71,7 +62,7 @@
 
     transition: transform 0.1s ease-in-out;
     &:hover {
-      transform: scale(1.2); // Phóng to khi hover
+      transform: scale(1.2); 
     }
   }
 }

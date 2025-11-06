@@ -46,7 +46,7 @@ const processDailyData = (list) => {
     .slice(0, 5)
     .map((day) => {
       if (!day.mainIcon) {
-        day.mainIcon = day.hourlyData[0].weather[0].icon; 
+        day.mainIcon = day.hourlyData[0].weather[0].icon;
       }
       return day;
     });
@@ -57,7 +57,7 @@ const ForecastPanel = ({ forecastList, onDaySelect, selectedDayDt }) => {
   const dailyData = processDailyData(forecastList);
   return (
     <div className="forecast-panel-card">
-      <h4>Dự báo theo giờ</h4>
+      <h4>Dự báo theo giờ ngày hôm nay </h4>
       <div className="hourly-forecast-scroll">
         {hourlyData.map((item, index) => (
           <div className="hourly-item" key={index}>
@@ -74,6 +74,19 @@ const ForecastPanel = ({ forecastList, onDaySelect, selectedDayDt }) => {
       <div className="five-day-forecast">
         {dailyData.map((day, index) => {
           const isSelected = selectedDayDt === day.hourlyData[0].dt;
+          console.log("day", day.maxTemp);
+          const minTemp = Math.round(day.minTemp);
+          const maxTemp = Math.round(day.maxTemp);
+          const currentTemp = Math.round(day.temp);
+          const range = maxTemp - minTemp;
+          const currentPositionPercent =
+            range > 0 ? ((currentTemp - minTemp) / range) * 100 : 50;
+          const cappedPosition = Math.max(
+            0,
+            Math.min(100, currentPositionPercent)
+          );
+          const averageTemp = (maxTemp + minTemp - 1) / 2;
+
           return (
             <div
               className={`day-item ${isSelected ? "active" : ""}`}
@@ -82,8 +95,21 @@ const ForecastPanel = ({ forecastList, onDaySelect, selectedDayDt }) => {
             >
               <span>{formatDay(day.hourlyData[0].dt)}</span>
               <img src={getWeatherIcon(day.mainIcon)} alt="" />
-              <strong>{Math.round(day.maxTemp)}°</strong>
-              <span className="min-temp">{Math.round(day.minTemp)}°</span>
+              <strong>{Math.round(averageTemp)}°</strong>
+              {/* <span className="min-temp">{Math.round(day.minTemp)}°</span> */}
+              <div className="temp-range">
+                <span className="range-label">{minTemp}°</span>
+
+                <div className="range-bar-container">
+                  <div className="range-bar-track"></div>
+                  <div className="range-bar-segment"></div>
+                  <div
+                    className="range-bar-current"
+                    style={{ left: `${cappedPosition}%` }}
+                  ></div>
+                </div>
+                <span className="range-label">{maxTemp}°</span>
+              </div>
             </div>
           );
         })}

@@ -84,22 +84,18 @@ const GoongMap = ({ apiKey, assetType, onMarkerClick }) => {
 
           if (
             isNaN(lat) ||
-            isNaN(lng) || // Kiểm tra có phải là SỐ không
+            isNaN(lng) || 
             lat < -90 ||
-            lat > 90 || // Kiểm tra VĨ ĐỘ
+            lat > 90 || 
             lng < -180 ||
-            lng > 180 // Kiểm tra KINH ĐỘ
+            lng > 180 
           ) {
-            // Nếu tọa độ sai, log ra lỗi và BỎ QUA asset này
             console.warn("Bỏ qua asset có tọa độ không hợp lệ:", asset.name, {
               lat,
               lng,
             });
-            return; // Dùng 'return' để bỏ qua vòng lặp này
+            return; 
           }
-          // --- KẾT THÚC SỬA LỖI ---
-
-          // ... (Logic tạo icon, el, root... giữ nguyên) ...
           const style =
             ASSET_STYLE_MAP[asset.assetType] || ASSET_STYLE_MAP.default;
           const IconComponent = style.icon;
@@ -117,9 +113,8 @@ const GoongMap = ({ apiKey, assetType, onMarkerClick }) => {
             />
           );
 
-          // 3. Sử dụng 'lng' và 'lat' đã được kiểm tra
           const marker = new goongSdk.Marker(el)
-            .setLngLat([lng, lat]) // Sử dụng Lng, Lat đã parse
+            .setLngLat([lng, lat]) 
             .addTo(map.current);
 
           const popup = new goongSdk.Popup({ offset: 25 }).setHTML(
@@ -131,7 +126,7 @@ const GoongMap = ({ apiKey, assetType, onMarkerClick }) => {
             e.stopPropagation();
             onMarkerClick(asset.id);
             map.current.flyTo({
-              center: [lng, lat], // Sử dụng Lng, Lat đã parse
+              center: [lng, lat], 
               zoom: 15,
             });
           });
