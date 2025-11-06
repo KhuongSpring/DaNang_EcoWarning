@@ -5,10 +5,10 @@ import {
   WiHumidity,
   WiBarometer,
   WiStrongWind,
-  WiThermometer, 
-  WiThermometerExterior, 
-  WiRain, 
-  WiCloudy, 
+  WiThermometer,
+  WiThermometerExterior,
+  WiRain,
+  WiCloudy,
 } from "react-icons/wi";
 import "../../styles/components/_weather-components.scss";
 
@@ -41,19 +41,17 @@ const CurrentWeatherCard = ({ data, isForecastDay }) => {
           </p>
         </div>
         <div className="temp-info">
-          {data.weather &&
-            data.weather[0] && (
-              <img
-                className="weather-icon"
-                src={getWeatherIcon(data.weather[0].icon)}
-                alt={data.weather[0].description}
-              />
-            )}
+          {data.weather && data.weather[0] && (
+            <img
+              className="weather-icon"
+              src={getWeatherIcon(data.weather[0].icon)}
+              alt={data.weather[0].description}
+            />
+          )}
           <span className="temp">{Math.round(data.main.temp)}°C</span>
-          {data.weather &&
-            data.weather[0] && ( 
-              <span className="description">{data.weather[0].description}</span>
-            )}
+          {data.weather && data.weather[0] && (
+            <span className="description">{data.weather[0].description}</span>
+          )}
         </div>
       </div>
 
@@ -151,7 +149,7 @@ const CurrentWeatherCard = ({ data, isForecastDay }) => {
         {data.rain && data.rain["3h"] !== undefined && (
           <div className="detail-item">
             <WiRain size={30} />
-            <span>Lượng mưa (1h)</span>
+            <span>Lượng mưa (3h)</span>
             <strong>{data.rain["3h"]} mm</strong>
           </div>
         )}

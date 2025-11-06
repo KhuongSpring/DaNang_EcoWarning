@@ -1,5 +1,5 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import Sidebar from "../components/common/Sidebar";
 import Footer from "../components/common/Footer";
 
@@ -9,7 +9,6 @@ const MainLayout = () => {
   return (
     <div className="app-layout">
       <Sidebar />
-
       <div className="main-content-wrapper">
         <main className="main-content">
           <Outlet />

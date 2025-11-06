@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import AssetTypeChart from "../../components/dashboard/AssetTypeChart";
 import DamageChart from "../../components/dashboard/DamageChart";
@@ -34,7 +33,7 @@ const DashboardPage = () => {
 
   return (
     <div className="dashboard-page">
-      <h1 className="dashboard-title">Dashboard Tổng quan</h1>
+      <h1 className="dashboard-title">Dashboard</h1>
 
       <div className="dashboard-grid">
         {/* <div className="chart-container col-span-4">

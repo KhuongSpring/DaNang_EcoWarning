@@ -16,19 +16,19 @@ const Sidebar = () => {
         <li className="sidebar-item">
           <NavLink to="/" className="sidebar-link" end>
             <FaChartPie className="sidebar-icon" />
-            <span className="sidebar-text">Dashboard Tổng quan</span>
+            <span className="sidebar-text">Dashboard</span>
           </NavLink>
         </li>
         <li className="sidebar-item">
           <NavLink to="/weather" className="sidebar-link">
             <FaRegSun className="sidebar-icon" />
-            <span className="sidebar-text">Thời tiết</span>
+            <span className="sidebar-text">Weather</span>
           </NavLink>
         </li>
         <li className="sidebar-item">
           <NavLink to="/map" className="sidebar-link">
             <FaMapMarkedAlt className="sidebar-icon" />
-            <span className="sidebar-text">Bản đồ Tương tác</span>
+            <span className="sidebar-text">Map</span>
           </NavLink>
         </li>
       </ul>

@@ -55,14 +55,14 @@ const WeatherCharts = ({ data, title }) => {
             <Bar
               dataKey="Khả năng mưa"
               barSize={30}
-              fill="#fde68a" 
+              fill="#ffaa00ff" 
               yAxisId="right"
               name="Khả năng mưa (%)"
             />
             <Line
               type="monotone"
               dataKey="Nhiệt độ"
-              stroke="#22c55e"
+              stroke="#00be46ff"
               strokeWidth={2}
               yAxisId="left"
               name="Nhiệt độ (°C)"
@@ -91,7 +91,7 @@ const WeatherCharts = ({ data, title }) => {
             <Legend />
             <Bar
               dataKey="Lượng mưa (mm)"
-              fill="#93c5fd" 
+              fill="#1781f9ff" 
               name="Lượng mưa (mm)"
               barSize={30}
             />
