@@ -35,7 +35,7 @@ const AirQualityCard = ({ data }) => {
           {aqiInfo.text}
         </span>
       </div>
-      <p>Nồng độ các chất ( &mu;g/m&sup3; ):</p>
+      <p className="api-titles">Nồng độ các chất ( &mu;g/m&sup3; ):</p>
       <div className="aqi-details-grid">
         <div className="aqi-detail-item">
           <span>PM2.5</span>

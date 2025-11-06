@@ -30,7 +30,8 @@ const CurrentWeatherCard = ({ data, isForecastDay }) => {
     <div className="current-weather-card">
       <div className="main-info">
         <div className="location-info">
-          <h2>{data.name}</h2>
+          {/* <h2>{data.name}</h2> */}
+          <h2 style={{ marginBottom: "10px" }}>Đà Nẵng</h2>
           <p>
             {new Date(data.dt * 1000).toLocaleDateString("vi-VN", {
               weekday: "long",
@@ -53,6 +54,18 @@ const CurrentWeatherCard = ({ data, isForecastDay }) => {
             <span className="description">{data.weather[0].description}</span>
           )}
         </div>
+        {/* <div className="temp-range">
+          <span className="range-label">{minTemp}°</span>
+          <div className="range-bar-container">
+            <div className="range-bar-track"></div>
+            <div className="range-bar-segment"></div>
+            <div
+              className="range-bar-current"
+              style={{ left: `${cappedPosition}%` }}
+            ></div>
+          </div>
+          <span className="range-label">{maxTemp}°</span>
+        </div> */}
       </div>
 
       <div className="details-grid">
@@ -66,11 +79,11 @@ const CurrentWeatherCard = ({ data, isForecastDay }) => {
           <span>Độ ẩm</span>
           <strong>{data.main.humidity}%</strong>
         </div>
-        <div className="detail-item">
+        {/* <div className="detail-item">
           <WiBarometer size={30} />
           <span>Áp suất</span>
           <strong>{data.main.pressure} hPa</strong>
-        </div>
+        </div> */}
         <div className="detail-item">
           <WiThermometer size={30} />
           <span>Cảm giác</span>
@@ -83,13 +96,8 @@ const CurrentWeatherCard = ({ data, isForecastDay }) => {
             <strong>{data.clouds.all}%</strong>
           </div>
         )}
-        <div className="detail-item">
-          <WiThermometer size={30} />
-          <span>Cảm giác</span>
-          <strong>{Math.round(data.main.feels_like)}°C</strong>
-        </div>
 
-        <div className="detail-item">
+        {/* <div className="detail-item">
           <WiThermometer size={30} />
           <span>Cao nhất</span>
           <strong>{Math.round(data.main.temp_max)}°C</strong>
@@ -99,30 +107,22 @@ const CurrentWeatherCard = ({ data, isForecastDay }) => {
           <WiThermometerExterior size={30} />
           <span>Thấp nhất</span>
           <strong>{Math.round(data.main.temp_min)}°C</strong>
-        </div>
-        {data.main.sea_level && (
+        </div> */}
+        {/* {data.main.sea_level && (
           <div className="detail-item">
             <WiBarometer size={30} />
             <span>Áp suất (Biển)</span>
             <strong>{data.main.sea_level} hPa</strong>
           </div>
-        )}
+        )} */}
 
-        {data.main.grnd_level && (
+        {/* {data.main.grnd_level && (
           <div className="detail-item">
             <WiBarometer size={30} />
             <span>Áp suất (Đất)</span>
             <strong>{data.main.grnd_level} hPa</strong>
           </div>
-        )}
-
-        {data.clouds && typeof data.clouds.all !== "undefined" && (
-          <div className="detail-item">
-            <WiCloudy size={30} />
-            <span>Mây che phủ</span>
-            <strong>{data.clouds.all}%</strong>
-          </div>
-        )}
+        )} */}
 
         {!isForecastDay && data.sys && (
           <>

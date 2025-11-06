@@ -1,4 +1,4 @@
-// src/components/common/Footer.jsx
+
 import React from "react";
 import "../../styles/components/_footer.scss";
 
