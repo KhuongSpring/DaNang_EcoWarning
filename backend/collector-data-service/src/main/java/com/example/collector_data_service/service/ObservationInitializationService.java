@@ -275,7 +275,7 @@ public class ObservationInitializationService {
         return new ParseResult(recordsProcessed, recordsInserted);
     }
 
-    // Thiet hai do thien tai (File này bạn đã sửa, tôi giữ nguyên)
+    // Thiet hai do thien tai
     @Transactional
     public ParseResult parseDisasterDamage(InputStream is) throws IOException {
         int recordsProcessed = 0;
@@ -499,6 +499,85 @@ public class ObservationInitializationService {
             }
         }
         log.info(LogMessage.SUCCESSFULLY_PARSED, "Perennial Crops Yield", recordsProcessed, recordsInserted);
+        return new ParseResult(recordsProcessed, recordsInserted);
+    }
+
+    // Luong mua thay doi qua tung nam
+    @Transactional
+    public ParseResult parseYearOverYearWaterLevel(InputStream is) throws IOException {
+        int recordsProcessed = 0;
+        int recordsInserted = 0;
+        List<Observation> observationsToSave = new ArrayList<>();
+        Map<String, Metric> metricCache = new HashMap<>();
+
+        final String METRIC_CATEGORY = "Thủy văn";
+        final String METRIC_UNIT = "mm";
+        final String METRIC_PREFIX = "Mực nước thay đổi - ";
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+             CSVParser csvParser = CSVFormat.DEFAULT.withDelimiter(';').withFirstRecordAsHeader().withTrim().parse(reader)) {
+
+            Map<String, Metric> metricMap = new HashMap<>();
+            Map<String, Integer> yearMap = new HashMap<>();
+
+            for (String header : csvParser.getHeaderNames()) {
+                if (header.isEmpty() || csvParser.getHeaderNames().indexOf(header) == 0) {
+                    continue;
+                }
+
+                String metricName = METRIC_PREFIX + header;
+                Metric metric = findOrCreateMetric(metricName, METRIC_CATEGORY, METRIC_UNIT, metricCache);
+                metricMap.put(header, metric);
+
+                Matcher matcher = YEAR_PATTERN.matcher(header);
+                if (matcher.find()) {
+                    yearMap.put(header, Integer.parseInt(matcher.group(1)));
+                } else {
+                    log.warn("Could not extract year from header: {}", header);
+                }
+            }
+
+            for (CSVRecord record : csvParser) {
+                recordsProcessed++;
+
+                try {
+                    Asset targetAsset = getOrCreateDefaultCityAsset();
+
+                    for (String header : metricMap.keySet()) {
+                        String valueStr = record.get(header);
+
+                        Double value = initDataHelper.parseSafeDouble(valueStr);
+                        if (value == null) {
+                            continue;
+                        }
+
+                        Metric metric = metricMap.get(header);
+                        Integer year = yearMap.get(header);
+
+                        if (metric == null || year == null) {
+                            log.warn("Skipping data for header '{}', metric or year not mapped.", header);
+                            continue;
+                        }
+
+                        Observation obs = new Observation();
+                        obs.setAsset(targetAsset);
+                        obs.setMetric(metric);
+                        obs.setRecordTime(LocalDateTime.of(year, 1, 1, 0, 0));
+                        obs.setValue(value);
+                        observationsToSave.add(obs);
+                        recordsInserted++;
+                    }
+                } catch (Exception e) {
+                    log.error(LogMessage.ERR_FILE_PARSE_FAILED, record.getRecordNumber(), e.getMessage());
+                }
+            }
+
+            if (!observationsToSave.isEmpty()) {
+                observationRepository.saveAll(observationsToSave);
+            }
+        }
+
+        log.info(LogMessage.SUCCESSFULLY_PARSED, "Year-Over-Year Water Level", recordsProcessed, recordsInserted);
         return new ParseResult(recordsProcessed, recordsInserted);
     }
 

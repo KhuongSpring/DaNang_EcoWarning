@@ -115,6 +115,24 @@ services:
     networks:
       - app-net
 
+  citizen-report-service:
+    build: ./citizen-report-service
+    container_name: citizen-report-service
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-server:
+        condition: service_started
+      postgresql:
+        condition: service_healthy
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_APPLICATION_NAME: citizen-report-service
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
+    networks:
+      - app-net
 
 networks:
   app-net:

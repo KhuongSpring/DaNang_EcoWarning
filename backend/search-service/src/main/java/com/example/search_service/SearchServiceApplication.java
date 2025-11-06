@@ -6,9 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchDataAutoConfiguration;
 import org.springframework.core.env.Environment;
 
-@SpringBootApplication(
-        exclude = {ElasticsearchDataAutoConfiguration.class}
-)
+@SpringBootApplication()
 @Slf4j
 public class SearchServiceApplication {
 

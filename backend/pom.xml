@@ -15,5 +15,6 @@
         <module>discovery-server</module>
         <module>collector-data-service</module>
         <module>search-service</module>
+        <module>citizen-report-service</module>
     </modules>
 </project>

@@ -20,6 +20,7 @@ public class FileNameConstant {
     public static final String ENV_RIVER_LEVELS = ENV_HYDRO_PATH + "muc_nuoc_mot_so_song_chinh.csv";
     public static final String ENV_AVG_TEMP = ENV_HYDRO_PATH + "nhiet_do_khong_khi_trung_binh.csv";
     public static final String ENV_SUNSHINE_HOURS = ENV_HYDRO_PATH + "so_gio_nang.csv";
+    public static final String ENV_YEAR_OVER_YEAR_WATER_LEVEL = ENV_HYDRO_PATH + "luong_mua_thay_doi_qua_tung_nam.csv";
 
     // === Thiên tai ===
     public static final String DISASTER_LANDSLIDES = DISASTER_PATH + "danh_sach_cac_khu_vuc_da_xay_ra_hien_tuong_sac_lo.csv";
