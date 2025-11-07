@@ -2,17 +2,25 @@ import React from "react";
 
 import "../../styles/components/_damage-detail-panel.scss";
 
-const DamageDetailPanel = ({ year, data }) => {
+const DamageDetailPanel = ({ year, data, onItemClick }) => {
   return (
     <div className="detail-panel-container chart-container">
       <h3>Chi tiết Thiệt hại Năm {year}</h3>
+      <p className="chart-subtitle" style={{ marginTop: "6px" }}>
+        Click vào một mục để xem lịch sử
+      </p>
 
       <div className="detail-list">
         {!data || data.length === 0 ? (
           <p>Không có dữ liệu chi tiết cho năm này.</p>
         ) : (
           data.map((item, index) => (
-            <div className="list-item" key={index}>
+            <div
+              className="list-item clickable"
+              key={index}
+              onClick={() => onItemClick && onItemClick(item.metricName)}
+              title={`Xem lịch sử: ${item.metricName}`}
+            >
               <span>{item.metricName}</span>
               <strong>
                 {item.value} {item.unit}
@@ -24,7 +32,6 @@ const DamageDetailPanel = ({ year, data }) => {
     </div>
   );
 };
-
 export const DamageDetailPlaceholder = () => {
   return (
     <div className="detail-panel-placeholder chart-container">

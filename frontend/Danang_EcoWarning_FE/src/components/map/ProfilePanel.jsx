@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { getAssetProfile } from "../../services/api";
 import "../../styles/components/_profile-panel.scss";
@@ -29,12 +28,17 @@ const ProfilePanel = ({ assetId, onClose }) => {
 
   const renderAttributes = (attributes) => {
     if (!attributes) return null;
-    return Object.entries(attributes).map(([key, value]) => (
-      <div className="profile-item" key={key}>
-        <span>{key}:</span>
-        <strong>{value}</strong>
-      </div>
-    ));
+    return Object.entries(attributes).map(([key, value]) => {
+      if (key == "image_url") {
+        return null;
+      }
+      return (
+        <div className="profile-item" key={key}>
+          <span>{key}:</span>
+          <strong>{value}</strong>
+        </div>
+      );
+    });
   };
 
   const renderLatestData = (latestData) => {
@@ -73,6 +77,15 @@ const ProfilePanel = ({ assetId, onClose }) => {
               <strong>{data.address || "Chưa cập nhật"}</strong>
             </div>
             {renderAttributes(data.attributes)}
+            {data.attributes && data.attributes.image_url && (
+              <div className="profile-image-container">
+                <img
+                  src={data.attributes.image_url}
+                  alt={data.name || "Ảnh tài sản"}
+                  className="profile-image"
+                />
+              </div>
+            )}
           </div>
 
           <div className="profile-section">

@@ -77,24 +77,31 @@ const GoongMap = ({ apiKey, assetType, onMarkerClick }) => {
         const newMarkersAndRoots = [];
 
         assets.forEach((asset) => {
-          const lat = parseFloat(asset.latitude);
-          const lng = parseFloat(asset.longitude);
+          const latStr = asset.latitude;
+          const lngStr = asset.longitude;
 
-          console.log("tọa độ: ", lat, lng);
+          const newLatStr = `${latStr.substring(0, 2)}.${latStr.substring(2)}`;
+
+          const newLngStr = `${lngStr.substring(0, 3)}.${lngStr.substring(3)}`;
+
+          const lat = parseFloat(newLatStr);
+          const lng = parseFloat(newLngStr);
+
+          console.log("Tọa độ đã sửa (string fix):", { lat, lng });
 
           if (
             isNaN(lat) ||
-            isNaN(lng) || 
+            isNaN(lng) ||
             lat < -90 ||
-            lat > 90 || 
+            lat > 90 ||
             lng < -180 ||
-            lng > 180 
+            lng > 180
           ) {
             console.warn("Bỏ qua asset có tọa độ không hợp lệ:", asset.name, {
               lat,
               lng,
             });
-            return; 
+            return;
           }
           const style =
             ASSET_STYLE_MAP[asset.assetType] || ASSET_STYLE_MAP.default;
@@ -114,7 +121,7 @@ const GoongMap = ({ apiKey, assetType, onMarkerClick }) => {
           );
 
           const marker = new goongSdk.Marker(el)
-            .setLngLat([lng, lat]) 
+            .setLngLat([lng, lat])
             .addTo(map.current);
 
           const popup = new goongSdk.Popup({ offset: 25 }).setHTML(
@@ -126,7 +133,7 @@ const GoongMap = ({ apiKey, assetType, onMarkerClick }) => {
             e.stopPropagation();
             onMarkerClick(asset.id);
             map.current.flyTo({
-              center: [lng, lat], 
+              center: [lng, lat],
               zoom: 15,
             });
           });

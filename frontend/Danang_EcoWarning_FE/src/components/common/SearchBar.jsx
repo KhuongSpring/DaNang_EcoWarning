@@ -1,10 +1,8 @@
-// src/components/common/SearchBar.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { getAssetList } from "../../services/api";
 import "../../styles/components/_searchbar.scss";
 
-// Các loại asset không có tọa độ (Hardcode)
-const SEARCHABLE_ASSET_TYPES = ["Sông", "Hồ Điều Hòa"]; // Thay bằng các type của bạn
+const SEARCHABLE_ASSET_TYPES = ["Sông", "Hồ Điều Hòa"];
 
 const SearchBar = ({ onAssetSelect }) => {
   const [query, setQuery] = useState("");
@@ -13,7 +11,6 @@ const SearchBar = ({ onAssetSelect }) => {
   const debounceTimeout = useRef(null);
 
   useEffect(() => {
-    // Hủy timeout cũ
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current);
     }
@@ -23,16 +20,14 @@ const SearchBar = ({ onAssetSelect }) => {
       return;
     }
 
-    // Đặt timeout mới (debouncing)
     debounceTimeout.current = setTimeout(async () => {
       setIsLoading(true);
       const allResults = [];
 
-      // Gọi API cho từng loại asset
       try {
         for (const type of SEARCHABLE_ASSET_TYPES) {
           const assets = await getAssetList(type);
-          // Lọc kết quả dựa trên query
+
           const filtered = assets.filter((asset) =>
             asset.name.toLowerCase().includes(query.toLowerCase())
           );
@@ -43,11 +38,11 @@ const SearchBar = ({ onAssetSelect }) => {
         console.error("Lỗi khi tìm kiếm:", error);
       }
       setIsLoading(false);
-    }, 500); // Chờ 500ms
+    }, 500);
   }, [query]);
 
   const handleSelect = (assetId) => {
-    onAssetSelect(assetId); // Gửi ID lên MapPage
+    onAssetSelect(assetId);
     setQuery("");
     setResults([]);
   };

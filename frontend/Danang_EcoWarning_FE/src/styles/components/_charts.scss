@@ -1,4 +1,3 @@
-// src/styles/components/_charts.scss
 @import "../../styles/abstracts/variables";
 @mixin glassmorphism-card {
   background-color: rgba(255, 255, 255, 0.8);
@@ -11,7 +10,7 @@
 
 .chart-container {
   @include glassmorphism-card;
-  // background-color: $bg-secondary; // White
+
   border: 1px solid $border-color;
   border-radius: 12px;
   padding: 20px;
@@ -32,9 +31,7 @@
     margin-bottom: 15px;
   }
 
-  // Cấu hình Recharts cho đẹp
   .recharts-responsive-container {
-    // Đảm bảo container không bị tràn
     width: 100% !important;
     height: 100% !important;
   }
@@ -47,26 +44,13 @@
   }
 }
 .custom-asset-tooltip {
-  /*
-    Recharts thường định vị tooltip ngay bên trên con trỏ.
-    Bằng cách thêm 'margin-bottom', bạn đang đẩy nó "cao lên" 
-    thêm 30px so với vị trí mặc định của nó.
-    
-    Hãy điều chỉnh giá trị 30px này cho đến khi bạn thấy vừa ý.
-  */
   margin-bottom: 30px;
-
-  /* Lưu ý: Bạn cũng có thể dùng 'transform' nếu muốn, 
-    nhưng nó có thể xung đột với transform có sẵn của Recharts.
-    'margin-bottom' thường an toàn hơn.
-  */
-  // transform: translateY(-30px); // (Cách này có thể ghi đè)
 }
 .recharts-wrapper,
 .recharts-responsive-container {
   &:focus,
   &:focus-visible,
   &:focus-within {
-    outline: none !important; // Tắt đường viền
+    outline: none !important;
   }
 }

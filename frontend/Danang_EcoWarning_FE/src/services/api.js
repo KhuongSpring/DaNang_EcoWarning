@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://103.167.89.27:8082/api/v1";
-const OPENWEATHER_API_KEY = "eab7f1f79ea231f5fbd1e3c427c8f527";
-const OPENWEATHER_BASE_URL = "https://api.openweathermap.org/data/2.5";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const OPENWEATHER_API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
+const OPENWEATHER_BASE_URL = import.meta.env.VITE_OPENWEATHER_BASE_URL;
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -71,6 +71,39 @@ export const getAgricultureSearch = (unit, crop, aspect) => {
 export const getAgricultureFilters = () => {
   return apiClient
     .get("/static/agriculture/filters")
+    .then(handleResponse)
+    .catch(handleError);
+};
+
+/**
+ * @param {number | string} assetId
+ */
+export const getMetricsByAsset = (assetId) => {
+  return apiClient
+    .get(`/metric/by-asset/${assetId}`)
+    .then(handleResponse)
+    .catch(handleError);
+};
+
+/**
+ * @param {number | string} assetId
+ * @param {number | string} metricId
+ * @param {string} fromDate
+ * @param {string} toDate
+ */
+export const getMetricHistory = (assetId, metricId, fromDate, toDate) => {
+  const params = {
+    assetId: assetId,
+    metricId: metricId,
+    fromDate: fromDate,
+    toDate: toDate,
+  };
+  Object.keys(params).forEach(
+    (key) => params[key] === undefined && delete params[key]
+  );
+
+  return apiClient
+    .get("/metric/history", { params })
     .then(handleResponse)
     .catch(handleError);
 };

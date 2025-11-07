@@ -1,4 +1,3 @@
-
 @import "../../styles/abstracts/variables";
 
 .profile-panel {
@@ -9,14 +8,14 @@
   right: 0;
   background-color: $bg-secondary;
   box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
-  transform: translateX(100%); 
+  transform: translateX(100%);
   transition: transform 0.3s ease-in-out;
   z-index: 1010;
   padding: 20px;
   overflow-y: auto;
 
   &.open {
-    transform: translateX(0); // Hiện
+    transform: translateX(0);
   }
 
   .close-btn {
@@ -52,6 +51,19 @@
         padding-bottom: 5px;
         margin-bottom: 10px;
         color: $text-primary;
+      }
+      .profile-image-container {
+        width: 100%;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid $border-color;
+
+        .profile-image {
+          width: 100%;
+          height: auto;
+          display: block;
+        }
       }
     }
 

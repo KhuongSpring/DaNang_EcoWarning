@@ -1,7 +1,7 @@
 import React from "react";
 import {
   ResponsiveContainer,
-  ComposedChart, 
+  ComposedChart,
   Line,
   Bar,
   XAxis,
@@ -11,7 +11,7 @@ import {
   CartesianGrid,
   BarChart,
 } from "recharts";
-import "../../styles/components/_weather-components.scss"; 
+import "../../styles/components/_weather-components.scss";
 const formatTime = (dt) =>
   new Date(dt * 1000).toLocaleTimeString("vi-VN", {
     hour: "2-digit",
@@ -22,8 +22,8 @@ const WeatherCharts = ({ data, title }) => {
   if (!data || data.length === 0) return null;
   const chartData = data.map((item) => ({
     time: formatTime(item.dt),
-    "Nhiệt độ": Math.round(item.main.temp), 
-    "Khả năng mưa": parseFloat((item.pop * 100).toFixed(0)), 
+    "Nhiệt độ": Math.round(item.main.temp),
+    "Khả năng mưa": parseFloat((item.pop * 100).toFixed(0)),
     "Lượng mưa (mm)": item.rain ? item.rain["3h"] : 0,
     "Tốc độ gió (m/s)": item.wind.speed,
   }));
@@ -48,14 +48,14 @@ const WeatherCharts = ({ data, title }) => {
               yAxisId="right"
               orientation="right"
               label={{ value: "%", angle: 90, position: "insideRight" }}
-              domain={[0, 100]} 
+              domain={[0, 100]}
             />
             <Tooltip />
             <Legend />
             <Bar
               dataKey="Khả năng mưa"
               barSize={30}
-              fill="#ffaa00ff" 
+              fill="#ffaa00ff"
               yAxisId="right"
               name="Khả năng mưa (%)"
             />
@@ -91,7 +91,7 @@ const WeatherCharts = ({ data, title }) => {
             <Legend />
             <Bar
               dataKey="Lượng mưa (mm)"
-              fill="#1781f9ff" 
+              fill="#1781f9ff"
               name="Lượng mưa (mm)"
               barSize={30}
             />

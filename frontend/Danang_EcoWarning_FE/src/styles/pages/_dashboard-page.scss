@@ -1,4 +1,3 @@
-// src/styles/pages/_dashboard-page.scss
 @import "../components/charts";
 @mixin glassmorphism-card {
   background-color: rgba(255, 255, 255, 0.85);
@@ -21,18 +20,12 @@
 
   .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(12, 1fr); // Vẫn là 12 cột
+    grid-template-columns: repeat(12, 1fr);
     gap: 24px;
   }
 
-  // --- XÓA CÁC ĐỊNH NGHĨA .chart-container- CŨ ---
-  // .chart-container-small { ... }
-  // .chart-container-medium { ... }
-  // .chart-container-large { ... }
-
-  // --- THÊM CÁC CLASS COL-SPAN MỚI ---
   .col-span-4 {
-    grid-column: span 12; // Mặc định trên mobile
+    grid-column: span 12;
     @media (min-width: 1024px) {
       grid-column: span 4 / span 4;
     }
@@ -61,10 +54,8 @@
   .col-span-12 {
     grid-column: span 12 / span 12;
   }
-  // -----------------------
 
   .chart-container {
-    // @include glassmorphism-card;
     min-height: 350px;
     display: flex;
     flex-direction: column;
@@ -72,15 +63,12 @@
       flex-grow: 1;
     }
   }
-  // ------------------------------------
 
-  // Đảm bảo các chart-container có chiều cao tối thiểu
   .chart-container {
     min-height: 350px;
     display: flex;
     flex-direction: column;
 
-    // Cho phép ResponsiveContainer co giãn
     .recharts-responsive-container {
       flex-grow: 1;
     }

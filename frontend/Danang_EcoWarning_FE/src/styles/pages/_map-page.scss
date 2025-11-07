@@ -1,4 +1,3 @@
-
 @import "../abstracts/variables";
 
 .map-page-layout {
@@ -38,7 +37,7 @@
   }
 
   &.profile-open .map-container {
-    margin-right: 400px; 
+    margin-right: 400px;
   }
   .custom-marker {
     width: 32px;
@@ -51,7 +50,7 @@
     transition: transform 0.1s ease-in-out;
 
     &:hover {
-      transform: scale(1.1); 
+      transform: scale(1.1);
     }
   }
   .react-icon-marker {
@@ -62,7 +61,7 @@
 
     transition: transform 0.1s ease-in-out;
     &:hover {
-      transform: scale(1.2); 
+      transform: scale(1.2);
     }
   }
 }
