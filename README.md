@@ -28,6 +28,8 @@ Dự án được thực hiện bởi đội HaUI.HIT_NovaForge và được ope
 
 Thông tin về cuộc thi mã nguồn mở của Olympic Tin Học Sinh Viên năm 2025 tại [**đây**](https://vfossa.vn/thong-bao/de-thi-phan-mem-nguon-mo-olp-2025-749.html).
 
+Báo cáo chi tiết của đề tài tại [đây](https://docs.google.com/document/d/1pqNb2L2AgMyZDjhv5KqYJ7zyoboxEZebpqtc5bBJSGI/edit?usp=sharing).
+
 Mục tiêu chính của dự án:
 - Phân tích dữ liệu về thời tiết, khí hậu, nông nghiệp và các khu vực phòng chống thiên tai (thu thập từ các nguồn dữ liệu mở).
 - Đánh giá sự tác động của khí hậu đến sản xuất nông nghiệp và các rủi ro thiên tai tiềm ẩn.
