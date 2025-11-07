@@ -1,7 +1,6 @@
 @import "../abstracts/variables";
 
 .weather-page {
-
   &::before {
     content: "";
     position: fixed;
@@ -9,7 +8,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: -2; 
+    z-index: -2;
     background-image: url("../../../public/sky.png");
     background-size: cover;
     background-position: center;
@@ -23,12 +22,11 @@
   .weather-page-title {
     font-size: 2rem;
     font-weight: 700;
-    color: #ffffff; 
+    color: #ffffff;
     text-align: center;
     margin-bottom: 1.5rem;
     text-shadow: 1px 2px 1px rgba(0, 0, 0, 0.2);
   }
-
 
   .weather-loading {
     display: flex;
@@ -44,12 +42,11 @@
 
   .weather-grid {
     display: grid;
-    grid-template-columns: 1fr; 
+    grid-template-columns: 1fr;
     gap: 18px;
     margin-top: 24px;
 
     @media (min-width: 1024px) {
-
       grid-template-columns: 2fr 1fr;
     }
 
@@ -60,7 +57,6 @@
     }
 
     .side-panel {
-
     }
   }
 }

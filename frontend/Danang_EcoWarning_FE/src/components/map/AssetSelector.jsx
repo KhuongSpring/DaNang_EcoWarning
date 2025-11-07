@@ -33,7 +33,7 @@ const AssetSelector = ({ value, onChange }) => {
 
         setTypeData(formattedData);
       } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu đếm asset:", error);
+
       }
     };
 

@@ -7,6 +7,11 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Environment Variables
+# Bỏ qua tất cả các file .env, KỂ CẢ file .env gốc
+.env
+
+
 node_modules
 dist
 dist-ssr

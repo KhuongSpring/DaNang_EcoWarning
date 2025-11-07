@@ -2,7 +2,12 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import "../../styles/components/_sidebar.scss";
 
-import { FaChartPie, FaMapMarkedAlt } from "react-icons/fa";
+
+import {
+  FaChartPie,
+  FaMapMarkedAlt,
+  FaExclamationTriangle,
+} from "react-icons/fa";
 import { FaRegSun } from "react-icons/fa6";
 import "../../../public/icons/Logo.png";
 
@@ -29,6 +34,14 @@ const Sidebar = () => {
           <NavLink to="/map" className="sidebar-link">
             <FaMapMarkedAlt className="sidebar-icon" />
             <span className="sidebar-text">Map</span>
+          </NavLink>
+        </li>
+
+        {/* 2. THÊM LINK MỚI VÀO SIDEBAR */}
+        <li className="sidebar-item">
+          <NavLink to="/report" className="sidebar-link">
+            <FaExclamationTriangle className="sidebar-icon" />
+            <span className="sidebar-text">Báo cáo sự cố</span>
           </NavLink>
         </li>
       </ul>

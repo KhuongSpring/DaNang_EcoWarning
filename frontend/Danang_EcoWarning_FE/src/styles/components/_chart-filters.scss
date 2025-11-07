@@ -1,14 +1,14 @@
 .chart-filters-container {
   display: flex;
-  flex-wrap: wrap; // Cho phép xuống dòng trên màn hình nhỏ
+  flex-wrap: wrap;
   gap: 15px;
   margin-bottom: 20px;
 
   .filter-group {
     display: flex;
     flex-direction: column;
-    flex-grow: 1; // Các bộ lọc tự co giãn
-    min-width: 180px; // Chiều rộng tối thiểu
+    flex-grow: 1;
+    min-width: 180px;
 
     label {
       font-size: 0.875rem;

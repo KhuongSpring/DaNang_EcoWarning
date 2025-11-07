@@ -1,4 +1,3 @@
-// src/components/dashboard/AssetTypeChart.jsx
 import React, { useEffect, useState } from "react";
 import {
   PieChart,

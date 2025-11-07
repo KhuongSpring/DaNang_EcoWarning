@@ -1,10 +1,9 @@
-// src/styles/components/_searchbar.scss
 @import "../../styles/abstracts/variables";
 
 .search-bar-container {
   position: absolute;
   top: 20px;
-  left: 20px; 
+  left: 20px;
   width: 350px;
   z-index: 10;
 

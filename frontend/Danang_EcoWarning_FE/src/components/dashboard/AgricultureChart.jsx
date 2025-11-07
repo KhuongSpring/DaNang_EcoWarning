@@ -1,5 +1,4 @@
-// src/components/dashboard/AgricultureChart.jsx
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -10,215 +9,329 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
-import {
-  getAgricultureFilters,
-  getAgricultureSearch,
-} from "../../services/api";
+import { getMetricsByAsset, getMetricHistory } from "../../services/api";
 
-// (Hàm parseMetricName giữ nguyên...)
-const parseMetricName = (metricName, cropsList, aspectsList) => {
-  if (aspectsList.includes(metricName)) {
-    const foundCrop = cropsList.find((c) => metricName.includes(c));
-    return { crop: foundCrop || null, aspect: metricName };
-  }
-  const parts = metricName.split(" - ");
-  if (parts.length === 2) {
-    const part1 = parts[0].trim();
-    const part2 = parts[1].trim();
-    if (cropsList.includes(part1) && aspectsList.includes(part2)) {
-      return { crop: part1, aspect: part2 };
-    }
-    if (aspectsList.includes(part1) && cropsList.includes(part2)) {
-      return { crop: part2, aspect: part1 };
-    }
-  }
-  console.warn(`Không thể phân tích: ${metricName}`);
-  return { crop: null, aspect: null };
-};
+const COLORS = ["#3b82f6", "#ef4444", "#22c55e"];
+const DEFAULT_ASSET_ID = 1823;
+
+const TEMP_METRIC_NAME = "Nhiệt độ không khí trung bình";
+const RAIN_METRIC_NAME = "Lượng mưa";
+const SUN_METRIC_NAME = "Số giờ nắng";
+const CATEGORY_TO_BLOCK = "Thiệt hại thiên tai";
 
 const AgricultureChart = () => {
-  const [selectedCrop, setSelectedCrop] = useState("");
-  const [selectedAspect, setSelectedAspect] = useState("");
-  const [selectedUnit, setSelectedUnit] = useState("");
-  const [dataMap, setDataMap] = useState(new Map());
-  const [rawData, setRawData] = useState([]);
-  const [cropOptions, setCropOptions] = useState([]);
-  const [aspectOptions, setAspectOptions] = useState([]);
-  const [unitOptions, setUnitOptions] = useState([]);
+  const [fullMetricsList, setFullMetricsList] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [metricsForCategory, setMetricsForCategory] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedMetricId, setSelectedMetricId] = useState("");
   const [chartData, setChartData] = useState([]);
+  const [chartInfo, setChartInfo] = useState({
+    name: "",
+    unit: "",
+    isMonthly: false,
+    displayType: "line",
+  });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const initialize = async () => {
+      setIsLoading(true);
       try {
-        const [filterResponse, dataResponse] = await Promise.all([
-          getAgricultureFilters(),
-          getAgricultureSearch(),
-        ]);
-
-        const masterLists = filterResponse;
-        const allData = dataResponse;
-        setRawData(allData);
-        const newMap = new Map();
-        allData.forEach((item) => {
-          const { metricName, unit } = item;
-          if (!metricName || !unit) return;
-          const { crop, aspect } = parseMetricName(
-            metricName,
-            masterLists.crops,
-            masterLists.aspects
-          );
-          if (!crop || !aspect) return;
-          if (!newMap.has(crop)) newMap.set(crop, new Map());
-          const aspectMap = newMap.get(crop);
-          if (!aspectMap.has(aspect)) aspectMap.set(aspect, new Set());
-          const unitSet = aspectMap.get(aspect);
-          unitSet.add(unit);
-        });
-
-        setDataMap(newMap);
-        const allCrops = Array.from(newMap.keys()).sort();
-        setCropOptions(allCrops);
-
-        if (allCrops.length > 0) {
-          setSelectedCrop(allCrops[0]); 
+        const metrics = await getMetricsByAsset(DEFAULT_ASSET_ID);
+        setFullMetricsList(metrics);
+        const uniqueCategories = [...new Set(metrics.map((m) => m.category))]
+          .filter((category) => category !== CATEGORY_TO_BLOCK)
+          .sort();
+        setCategories(uniqueCategories);
+        if (uniqueCategories.length > 0) {
+          const defaultCategory = uniqueCategories.includes("Nông nghiệp")
+            ? "Nông nghiệp"
+            : uniqueCategories[0];
+          setSelectedCategory(defaultCategory);
         }
-
       } catch (error) {
-        console.error("Lỗi khi khởi tạo dữ liệu nông nghiệp:", error);
       }
     };
-
     initialize();
-  }, []); 
+  }, []);
 
   useEffect(() => {
-    if (!selectedCrop || !dataMap.has(selectedCrop)) {
-      setAspectOptions([]);
-      setUnitOptions([]);
-      setSelectedAspect("");
-      setSelectedUnit("");
+    if (!selectedCategory || fullMetricsList.length === 0) {
+      setMetricsForCategory([]);
       return;
     }
-    const aspectMap = dataMap.get(selectedCrop);
-    const validAspects = Array.from(aspectMap.keys()).sort();
-    setAspectOptions(validAspects);
-
-    if (validAspects.length > 0) {
-      setSelectedAspect(validAspects[0]); 
+    const prefixToBlock = "Sản lượng - ";
+    const metrics = fullMetricsList
+      .filter((m) => m.category === selectedCategory)
+      .filter((m) => !m.name.startsWith(prefixToBlock))
+      .sort((a, b) => a.name.localeCompare(b.name));
+    setMetricsForCategory(metrics);
+    if (metrics.length > 0) {
+      setSelectedMetricId(metrics[0].id);
     } else {
-      setSelectedAspect("");
+      setSelectedMetricId("");
+      setChartData([]);
+      setChartInfo({
+        name: "",
+        unit: "",
+        isMonthly: false,
+        displayType: "empty",
+      });
     }
-    setSelectedUnit(""); 
-  }, [selectedCrop, dataMap]);
+  }, [selectedCategory, fullMetricsList]);
 
   useEffect(() => {
-    if (
-      !selectedCrop ||
-      !selectedAspect ||
-      !dataMap.has(selectedCrop) ||
-      !dataMap.get(selectedCrop).has(selectedAspect)
-    ) {
-      setUnitOptions([]);
-      setSelectedUnit("");
-      return;
-    }
-    const unitSet = dataMap.get(selectedCrop).get(selectedAspect);
-    const validUnits = Array.from(unitSet).sort();
-    setUnitOptions(validUnits);
-    if (validUnits.length > 0) setSelectedUnit(validUnits[0]);
-    else setSelectedUnit("");
-  }, [selectedCrop, selectedAspect, dataMap]);
-  useEffect(() => {
-    if (!selectedCrop || !selectedAspect || !selectedUnit) {
+    if (!selectedMetricId) {
+      setIsLoading(false);
       setChartData([]);
+      setChartInfo({
+        name: "Vui lòng chọn số liệu",
+        unit: "",
+        isMonthly: false,
+        displayType: "empty",
+      });
       return;
     }
-    const filteredData = rawData.filter((item) => {
-      const isUnitMatch = item.unit === selectedUnit;
-      const isCropMatch = item.metricName.includes(selectedCrop);
-      const isAspectMatch = item.metricName.includes(selectedAspect);
-      return isUnitMatch && isCropMatch && isAspectMatch;
-    });
-    setChartData(
-      filteredData.map((d) => ({
-        ...d,
-        year: d.year,
-        totalValue: d.totalValue,
-      }))
-    );
-  }, [selectedCrop, selectedAspect, selectedUnit, rawData]);
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const data = await getMetricHistory(DEFAULT_ASSET_ID, selectedMetricId);
+        const isFaultyTempMetric = data.metricName === TEMP_METRIC_NAME;
+        const isRainMetric = data.metricName === RAIN_METRIC_NAME;
+        const isSunMetric = data.metricName === SUN_METRIC_NAME;
+        const formattedData = data.timeSeries
+          .map((item) => {
+            const dateObj = new Date(item.timestamp);
+            const month = (dateObj.getMonth() + 1).toString().padStart(2, "0");
+            const year = dateObj.getFullYear();
+            let rawValue = parseFloat(item.value);
+            if (isFaultyTempMetric) rawValue /= 10;
+            if (isRainMetric) rawValue /= 100;
+            if (isSunMetric) rawValue /= 100;
+            return {
+              value: rawValue,
+              timeLabel: `${month}/${year}`,
+              fullDate: dateObj,
+            };
+          })
+          .sort((a, b) => a.fullDate - b.fullDate);
+
+        const years = formattedData.map((item) => item.fullDate.getFullYear());
+        const uniqueYears = [...new Set(years)];
+        const isMonthly = uniqueYears.length < formattedData.length;
+        let newDisplayType = "line";
+        if (formattedData.length === 1) {
+          newDisplayType = "stat";
+        } else if (formattedData.length === 0) {
+          newDisplayType = "empty";
+        }
+
+        setChartData(formattedData);
+        setChartInfo({
+          name: data.metricName,
+          unit: data.unit,
+          isMonthly: isMonthly,
+          displayType: newDisplayType,
+        });
+      } catch (error) {
+        setChartData([]);
+        setChartInfo({
+          name: "Lỗi tải dữ liệu",
+          unit: "",
+          isMonthly: false,
+          displayType: "empty",
+        });
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, [selectedMetricId]);
+
+  const formatTooltipValue = (value) => {
+    if (chartInfo.name === TEMP_METRIC_NAME) return value.toFixed(1);
+    if (chartInfo.name === RAIN_METRIC_NAME) return value.toFixed(2);
+    if (chartInfo.name === SUN_METRIC_NAME) return value.toFixed(2);
+    if (Number.isInteger(value)) return value;
+    return value.toFixed(2);
+  };
+  const ChartPlaceholder = ({ message }) => (
+    <div
+      style={{
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "#666",
+        fontSize: "0.9rem",
+      }}
+    >
+      <p>{message}</p>
+    </div>
+  );
+  const CustomTooltip = (
+    <Tooltip
+      isAnimationActive={false}
+      formatter={(value) => [
+        `${formatTooltipValue(parseFloat(value))} ${chartInfo.unit}`,
+        chartInfo.name,
+      ]}
+      wrapperStyle={{
+        zIndex: 10,
+        backgroundColor: "#f0f0f0",
+        border: "1px solid #ccc",
+        borderRadius: "8px",
+        boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+        outline: "none",
+      }}
+    />
+  );
+
+  const renderChart = () => {
+    switch (chartInfo.displayType) {
+      case "line":
+        return (
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart
+              data={chartData}
+              margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+              <XAxis
+                dataKey="timeLabel"
+                tickFormatter={(timeLabel) => {
+                  if (chartInfo.isMonthly) {
+                    if (timeLabel.startsWith("01/"))
+                      return timeLabel.split("/")[1];
+                    return "";
+                  }
+                  return timeLabel.split("/")[1];
+                }}
+                interval={chartInfo.isMonthly ? 11 : 0}
+              />
+              <YAxis />
+              {CustomTooltip}
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="value"
+                name={chartInfo.name}
+                stroke={COLORS[0]}
+                strokeWidth={2}
+                activeDot={{ r: 6 }}
+                isAnimationActive={true}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        );
+
+      case "stat":
+        const statValue = chartData[0].value;
+        const statYear = chartData[0].timeLabel.split("/")[1];
+
+        return (
+          <div
+            style={{
+              height: "100%",
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+              padding: "20px",
+              color: "#333",
+            }}
+          >
+            {/* <div
+              style={{
+                fontSize: "1.2rem",
+                color: "#555",
+                marginBottom: "15px",
+              }}
+            >
+              Năm {statYear}
+            </div> */}
+
+            {}
+            <div
+              style={{ fontSize: "4rem", fontWeight: "700", color: COLORS[0] }}
+            >
+              {formatTooltipValue(statValue)}
+              {chartInfo.unit}
+            </div>
+
+            {}
+            {/* <div
+              style={{ fontSize: "1.5rem", color: "#666", marginTop: "5px" }}
+            >
+              {chartInfo.unit}
+            </div> */}
+          </div>
+        );
+
+      case "empty":
+      default:
+        return <ChartPlaceholder message="Không có dữ liệu cho số liệu này." />;
+    }
+  };
 
   return (
     <>
       <div className="chart-filters-container">
         <div className="filter-group">
-          <label htmlFor="crop-select">Cây trồng:</label>
+          <label htmlFor="category-select">Danh mục:</label>
           <select
-            id="crop-select"
-            value={selectedCrop}
-            onChange={(e) => setSelectedCrop(e.target.value)}
+            id="category-select"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            disabled={isLoading}
           >
-            <option value="">-- Chọn cây trồng --</option>
-            {cropOptions.map((crop) => (
-              <option key={crop} value={crop}>
-                {crop}
+            <option value="">-- Chọn danh mục --</option>
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
               </option>
             ))}
           </select>
         </div>
         <div className="filter-group">
-          <label htmlFor="aspect-select">Tiêu chí:</label>
+          <label htmlFor="metric-select">Số liệu:</label>
           <select
-            id="aspect-select"
-            value={selectedAspect}
-            onChange={(e) => setSelectedAspect(e.target.value)}
-            disabled={!selectedCrop}
+            id="metric-select"
+            value={selectedMetricId}
+            onChange={(e) => setSelectedMetricId(e.target.value)}
+            disabled={isLoading || metricsForCategory.length === 0}
           >
-            <option value="">-- Chọn tiêu chí --</option>
-            {aspectOptions.map((aspect) => (
-              <option key={aspect} value={aspect}>
-                {aspect}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="filter-group">
-          <label htmlFor="unit-select">Đơn vị:</label>
-          <select
-            id="unit-select"
-            value={selectedUnit}
-            onChange={(e) => setSelectedUnit(e.target.value)}
-            disabled={!selectedAspect}
-          >
-            <option value="">-- Chọn đơn vị --</option>
-            {unitOptions.map((unit) => (
-              <option key={unit} value={unit}>
-                {unit}
+            <option value="">-- Chọn số liệu --</option>
+            {metricsForCategory.map((metric) => (
+              <option key={metric.id} value={metric.id}>
+                {metric.name}
               </option>
             ))}
           </select>
         </div>
       </div>
-      <ResponsiveContainer width="100%" height={250}>
-        <LineChart
-          data={chartData}
-          margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-          <XAxis dataKey="year" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line
-            type="monotone"
-            dataKey="totalValue"
-            name={chartData[0]?.metricName || "Đang tải..."}
-            stroke="#3b82f6"
-            strokeWidth={2}
-            activeDot={{ r: 6 }}
-          />
-        </LineChart>
-      </ResponsiveContainer>
+
+      <h3
+        style={{
+          paddingLeft: "10px",
+          marginTop: "10px",
+          marginBottom: "20px",
+        }}
+      >
+        {chartInfo.name}
+        {chartInfo.displayType !== "stat" &&
+          chartInfo.unit &&
+          ` (${chartInfo.unit})`}
+      </h3>
+      <div style={{ height: "250px", width: "100%" }}>
+        {isLoading ? (
+          <ChartPlaceholder message="Đang tải dữ liệu biểu đồ..." />
+        ) : (
+          renderChart()
+        )}
+      </div>
     </>
   );
 };
