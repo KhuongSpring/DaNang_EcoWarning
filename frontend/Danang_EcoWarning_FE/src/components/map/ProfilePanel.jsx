@@ -1,4 +1,4 @@
-// src/components/map/ProfilePanel.jsx
+
 import React, { useState, useEffect } from "react";
 import { getAssetProfile } from "../../services/api";
 import "../../styles/components/_profile-panel.scss";

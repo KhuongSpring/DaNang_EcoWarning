@@ -8,7 +8,57 @@
   backdrop-filter: blur(12px);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
 }
+.temp-range {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 80%;
+  margin-top: 10px;
 
+  .range-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: $text-primary;
+    flex-shrink: 0;
+  }
+
+  .range-bar-container {
+    flex-grow: 1;
+    position: relative;
+    height: 14px;
+    display: flex;
+    align-items: center;
+  }
+
+  .range-bar-track {
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    background-color: #d0d0d0;
+    border-radius: 2px;
+  }
+
+  .range-bar-segment {
+    position: absolute;
+    left: 30%;
+    width: 40%;
+    height: 6px;
+    background-color: #f3c322;
+    border-radius: 3px;
+  }
+
+  .range-bar-current {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    z-index: 2;
+  }
+}
 .current-weather-card {
   @include glassmorphism-card;
   display: flex;
@@ -19,8 +69,9 @@
   .main-info {
     display: flex;
     align-items: center;
-    gap: 20px;
-    flex-wrap: wrap;
+    gap: 80px;
+    flex-wrap: nowrap;
+    width: 100%;
   }
 
   .location-info {
@@ -78,7 +129,7 @@
 
       svg {
         font-size: 1.5rem;
-        color: $primary-color; // Thêm màu cho icon
+        color: $primary-color;
       }
       strong {
         font-weight: 500;
@@ -149,9 +200,9 @@
         background-color: rgba(255, 255, 255, 0.6);
       }
       &.active {
-        background-color: $primary-color;
+        background-color: #7ec6fa;
         color: white;
-        border-color: $primary-color;
+        border-color: #7ec6fa;
         .min-temp,
         .day-description {
           color: #e0e0e0;
@@ -189,6 +240,7 @@
   h4 {
     margin-bottom: 15px;
   }
+
   .aqi-main {
     display: flex;
     align-items: center;
@@ -217,12 +269,13 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 10px 15px;
+    margin-top: 12px;
 
     .aqi-detail-item {
       display: flex;
       justify-content: space-between;
       padding: 5px;
-      background: $bg-primary;
+      background: transparent;
       border-radius: 6px;
 
       span {
