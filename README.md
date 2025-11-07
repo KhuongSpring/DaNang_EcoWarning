@@ -70,7 +70,7 @@ Back-end của hệ thống được thiết kế theo kiến trúc microservice
 - [Swagger](https://springdoc.org): Tự động tạo tài liệu và giao diện thử nghiệm API.
 - [Apache Commons CSV](https://commons.apache.org/proper/commons-csv): Hỗ trợ đọc và phân tích cú pháp dữ liệu từ các file csv.
 
-<img loading="lazy" src="./docs/images/system_architecture.svg" alt="Architecture" width="100%" height=600>
+<img loading="lazy" src="./backend/docs/images/system_architecture.svg" alt="Architecture" width="100%" height=600>
 
 ## 🚀 Hướng dẫn cài đặt
 
