@@ -5,15 +5,18 @@ services:
     image: postgres:16-alpine
     container_name: postgresql
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: khuong123
-      POSTGRES_DB: collector-data-service
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     networks:
       - app-net
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres-init:/docker-entrypoint-initdb.d
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres -d collector-data-service" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
       interval: 10s
       retries: 5
       start_period: 20s
@@ -50,7 +53,6 @@ services:
       retries: 5
       start_period: 40s
 
-
   # --- API Gateway ---
   api-gateway:
     build: ./api-gateway
@@ -82,7 +84,7 @@ services:
       config-server:
         condition: service_healthy
       discovery-server:
-        condition: service_started
+        condition: service_healthy
       postgresql:
         condition: service_healthy
     ports:
@@ -101,7 +103,7 @@ services:
       config-server:
         condition: service_healthy
       discovery-server:
-        condition: service_started
+        condition: service_healthy
       postgresql:
         condition: service_healthy
       collector-data-service:
@@ -122,7 +124,7 @@ services:
       config-server:
         condition: service_healthy
       discovery-server:
-        condition: service_started
+        condition: service_healthy
       postgresql:
         condition: service_healthy
     ports:
@@ -131,9 +133,13 @@ services:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_APPLICATION_NAME: citizen-report-service
       SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
     networks:
       - app-net
 
 networks:
   app-net:
     driver: bridge
+
+volumes: # <-- Thêm khối này
+  postgres_data:

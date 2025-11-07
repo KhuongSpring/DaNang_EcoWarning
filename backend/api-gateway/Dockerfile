@@ -4,7 +4,7 @@ COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-FROM openjdk:21-jdk-slim
+FROM openjdk:21-ea-21-jdk-slim
 WORKDIR /app
 RUN apt-get update && apt-get install -y wget curl && rm -rf /var/lib/apt/lists/*
 COPY --from=build /app/target/*.jar app.jar

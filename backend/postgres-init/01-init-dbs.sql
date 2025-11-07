@@ -1,0 +1,1 @@
+CREATE DATABASE citizen_report_service;
