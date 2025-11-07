@@ -74,7 +74,7 @@ const ForecastPanel = ({ forecastList, onDaySelect, selectedDayDt }) => {
       <div className="five-day-forecast">
         {dailyData.map((day, index) => {
           const isSelected = selectedDayDt === day.hourlyData[0].dt;
-          console.log("day", day.maxTemp);
+         
           const minTemp = Math.round(day.minTemp);
           const maxTemp = Math.round(day.maxTemp);
           const currentTemp = Math.round(day.temp);

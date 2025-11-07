@@ -51,7 +51,6 @@ const AgricultureChart = () => {
           setSelectedCategory(defaultCategory);
         }
       } catch (error) {
-        console.error("Lỗi khi tải danh sách metrics:", error);
       }
     };
     initialize();
@@ -136,7 +135,6 @@ const AgricultureChart = () => {
           displayType: newDisplayType,
         });
       } catch (error) {
-        console.error("Lỗi khi tải dữ liệu lịch sử metric:", error);
         setChartData([]);
         setChartInfo({
           name: "Lỗi tải dữ liệu",

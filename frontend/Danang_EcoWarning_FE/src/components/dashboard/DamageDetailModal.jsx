@@ -40,7 +40,7 @@ const DamageDetailModal = ({ isOpen, onClose, metric, assetId }) => {
         setChartData(formattedData);
         setUnit(data.unit);
       } catch (error) {
-        console.error("Lỗi khi tải lịch sử metric thiệt hại:", error);
+
       }
       setIsLoading(false);
     };

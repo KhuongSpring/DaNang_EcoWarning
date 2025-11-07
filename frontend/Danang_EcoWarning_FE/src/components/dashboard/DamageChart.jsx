@@ -25,7 +25,7 @@ const DamageChart = ({ onBarClick }) => {
         }));
         setData(chartData);
       } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu thiệt hại:", error);
+
       }
     };
     fetchData();

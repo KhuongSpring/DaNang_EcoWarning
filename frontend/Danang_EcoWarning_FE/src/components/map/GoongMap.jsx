@@ -1,6 +1,9 @@
 import React, { useRef, useEffect } from "react";
+
 import { createRoot } from "react-dom/client";
+
 import goongSdk from "@goongmaps/goong-js";
+
 import { getAssetMap } from "../../services/api";
 
 import {
@@ -22,11 +25,16 @@ const ASSET_STYLE_MAP = {
   "Trạm Đo Mưa": { icon: FaCloudRain, color: "#7F8C8D" },
   default: { icon: FaMapMarkerAlt, color: "#C0392B" },
 };
-const ICON_SIZE = "24px";
 
-const GoongMap = ({ apiKey, assetType, onMarkerClick }) => {
+const ICON_SIZE = "24px";
+const DEFAULT_CENTER = [108.2208, 16.0471];
+const DEFAULT_ZOOM = 9;
+
+const GoongMap = ({ apiKey, assetType, onMarkerClick, selectedAssetId }) => {
   const mapContainer = useRef(null);
+
   const map = useRef(null);
+
   const markersRef = useRef([]);
 
   if (apiKey) {
@@ -38,8 +46,8 @@ const GoongMap = ({ apiKey, assetType, onMarkerClick }) => {
     map.current = new goongSdk.Map({
       container: mapContainer.current,
       style: "https://tiles.goong.io/assets/goong_map_web.json",
-      center: [108.2208, 16.0471],
-      zoom: 9,
+      center: DEFAULT_CENTER, 
+      zoom: DEFAULT_ZOOM,
     });
     map.current.addControl(new goongSdk.NavigationControl());
   }, []);
@@ -50,34 +58,37 @@ const GoongMap = ({ apiKey, assetType, onMarkerClick }) => {
     }
 
     let isCancelled = false;
-
-    console.log(`Đang dọn dẹp ${markersRef.current.length} icon cũ...`);
     markersRef.current.forEach(({ marker, root }) => {
       root.unmount();
+
       marker.remove();
     });
+
     markersRef.current = [];
 
     const fetchAndDrawAssets = async () => {
       try {
-        console.log(`Bắt đầu tải: ${assetType}`);
+
+
         const assets = await getAssetMap(assetType);
 
         if (isCancelled) {
-          console.log(`ĐÃ HỦY (ignored): ${assetType}`);
+       
+
           return;
         }
 
         if (!assets || assets.length === 0) {
-          console.warn(`Không tìm thấy asset cho: ${assetType}`);
+         
+
           return;
         }
 
-        console.log(`Đang vẽ: ${assetType}`);
         const newMarkersAndRoots = [];
 
         assets.forEach((asset) => {
           const latStr = asset.latitude;
+
           const lngStr = asset.longitude;
 
           const newLatStr = `${latStr.substring(0, 2)}.${latStr.substring(2)}`;
@@ -85,9 +96,10 @@ const GoongMap = ({ apiKey, assetType, onMarkerClick }) => {
           const newLngStr = `${lngStr.substring(0, 3)}.${lngStr.substring(3)}`;
 
           const lat = parseFloat(newLatStr);
+
           const lng = parseFloat(newLngStr);
 
-          console.log("Tọa độ đã sửa (string fix):", { lat, lng });
+  
 
           if (
             isNaN(lat) ||
@@ -99,41 +111,58 @@ const GoongMap = ({ apiKey, assetType, onMarkerClick }) => {
           ) {
             console.warn("Bỏ qua asset có tọa độ không hợp lệ:", asset.name, {
               lat,
+
               lng,
             });
+
             return;
           }
+
           const style =
             ASSET_STYLE_MAP[asset.assetType] || ASSET_STYLE_MAP.default;
+
           const IconComponent = style.icon;
+
           const iconColor = style.color;
+
           const el = document.createElement("div");
+
           el.className = "react-icon-marker";
+
           const root = createRoot(el);
+
           root.render(
             <IconComponent
               style={{
                 color: iconColor,
+
                 fontSize: ICON_SIZE,
+
                 filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.3))",
               }}
             />
           );
 
           const marker = new goongSdk.Marker(el)
+
             .setLngLat([lng, lat])
+
             .addTo(map.current);
 
           const popup = new goongSdk.Popup({ offset: 25 }).setHTML(
             `<h3>${asset.name}</h3><p>${asset.assetType}</p>`
           );
+
           marker.setPopup(popup);
 
           el.addEventListener("click", (e) => {
             e.stopPropagation();
+
             onMarkerClick(asset.id);
+
             map.current.flyTo({
               center: [lng, lat],
+
               zoom: 15,
             });
           });
@@ -145,17 +174,25 @@ const GoongMap = ({ apiKey, assetType, onMarkerClick }) => {
           markersRef.current = newMarkersAndRoots;
         }
       } catch (error) {
-        console.error(`Lỗi khi tải ${assetType}:`, error);
+       
       }
     };
 
     fetchAndDrawAssets();
 
     return () => {
-      console.log(`Cleanup effect của: ${assetType}`);
+
       isCancelled = true;
     };
   }, [assetType]);
+  useEffect(() => {
+    if (map.current && selectedAssetId === null) {
+      map.current.flyTo({
+        center: DEFAULT_CENTER,
+        zoom: DEFAULT_ZOOM,
+      });
+    }
+  }, [selectedAssetId]);
 
   return <div ref={mapContainer} className="map-view" />;
 };

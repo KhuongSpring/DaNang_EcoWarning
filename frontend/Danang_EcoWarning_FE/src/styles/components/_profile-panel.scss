@@ -87,4 +87,56 @@
       font-weight: 700;
     }
   }
+  .profile-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 1rem;
+
+    .list-item {
+      background-color: $bg-primary; // Giả định bạn có biến $bg-primary
+      border-radius: 8px;
+      padding: 1rem;
+      border: 1px solid $border-color;
+
+      .list-item-name {
+        font-size: 1.1rem;
+        color: $primary-color;
+        margin: 0 0 0.25rem 0;
+      }
+
+      .list-item-address {
+        font-size: 0.9rem;
+        color: $text-secondary;
+        margin: 0 0 0.75rem 0;
+        font-style: italic;
+      }
+
+      .list-item-attrs {
+        border-top: 1px dashed $border-color;
+        padding-top: 0.75rem;
+      }
+
+      // Style cho các thuộc tính nhỏ trong danh sách
+      .profile-item-small {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.85rem;
+        margin-bottom: 5px;
+
+        span {
+          color: $text-secondary;
+          text-transform: capitalize;
+          padding-right: 10px;
+        }
+        strong {
+          color: $text-primary;
+          text-align: right;
+          flex-shrink: 0;
+          max-width: 60%; // Tránh text quá dài
+          overflow-wrap: break-word;
+        }
+      }
+    }
+  }
 }

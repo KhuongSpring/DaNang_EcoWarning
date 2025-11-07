@@ -96,15 +96,12 @@ import AssetSelector from "../../components/map/AssetSelector";
 
 const MapPage = () => {
   const GOONG_MAP_TILES_KEY = import.meta.env.VITE_GOONG_MAP_TILES_KEY;
-
   const [selectedAssetId, setSelectedAssetId] = useState(null);
-
   const [selectedAssetType, setSelectedAssetType] = useState("");
 
   return (
     <div className="map-page-layout">
       <div className="map-container">
-        {/* <SearchBar onAssetSelect={setSelectedAssetId} /> */}
         <AssetSelector
           value={selectedAssetType}
           onChange={setSelectedAssetType}
@@ -114,6 +111,7 @@ const MapPage = () => {
           apiKey={GOONG_MAP_TILES_KEY}
           assetType={selectedAssetType}
           onMarkerClick={setSelectedAssetId}
+          selectedAssetId={selectedAssetId} // <--- THÊM DÒNG NÀY
         />
       </div>
 

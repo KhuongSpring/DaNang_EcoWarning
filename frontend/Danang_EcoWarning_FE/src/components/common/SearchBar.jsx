@@ -35,7 +35,7 @@ const SearchBar = ({ onAssetSelect }) => {
         }
         setResults(allResults);
       } catch (error) {
-        console.error("Lỗi khi tìm kiếm:", error);
+  
       }
       setIsLoading(false);
     }, 500);
