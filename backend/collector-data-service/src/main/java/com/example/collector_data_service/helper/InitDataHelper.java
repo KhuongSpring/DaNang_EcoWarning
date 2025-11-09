@@ -14,7 +14,7 @@ public class InitDataHelper {
             return null;
         }
         try {
-            String sanitizedString = valueStr.replace(".", "").replace(",", ".");
+            String sanitizedString = valueStr.trim().replace(",", "");
 
             if (sanitizedString.indexOf('.') != sanitizedString.lastIndexOf('.')) {
                 log.warn(LogMessage.ERR_LOAD_DOUBLE_FAIL, valueStr);
