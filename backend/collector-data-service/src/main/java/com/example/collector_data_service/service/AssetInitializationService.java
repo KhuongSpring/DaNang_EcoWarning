@@ -295,8 +295,8 @@ public class AssetInitializationService {
                     if (coordinates != null && !coordinates.isEmpty()) {
                         String[] latLong = coordinates.split(",");
                         if (latLong.length == 2) {
-                            asset.setLatitude(initDataHelper.parseSafeDouble(latLong[0]));
-                            asset.setLongitude(initDataHelper.parseSafeDouble(latLong[1]));
+                            asset.setLatitude(initDataHelper.parseSafeDouble(latLong[0].trim()));
+                            asset.setLongitude(initDataHelper.parseSafeDouble(latLong[1].trim()));
                         } else {
                             log.warn(LogMessage.ERR_PARSE_COORDINATE_FOR_ASSET, coordinates, uniqueName);
                         }
