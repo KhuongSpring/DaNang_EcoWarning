@@ -49,6 +49,11 @@ public abstract class ReportMapper {
                 default -> details;
             };
 
+            String json = objectMapper.writeValueAsString(validatedDto);
+            if (json.length() > 2048) { // 2 KB
+                throw new VsException(ErrorMessage.ERR_REPORT_DETAILS_TOO_LONG);
+            }
+
             return objectMapper.writeValueAsString(validatedDto);
         } catch (Exception e) {
             throw new VsException(ErrorMessage.ERR_DETAILS_NOT_VALID + e.getMessage());

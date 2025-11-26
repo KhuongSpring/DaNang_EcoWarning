@@ -9,6 +9,7 @@ import com.example.citizen_report_service.domain.entity.Report;
 import com.example.citizen_report_service.domain.entity.ReportStatus;
 import com.example.citizen_report_service.domain.entity.ReportType;
 import com.example.citizen_report_service.domain.mapper.ReportMapper;
+import com.example.citizen_report_service.domain.validator.ReportValidator;
 import com.example.citizen_report_service.exception.VsException;
 import com.example.citizen_report_service.repository.ReportRepository;
 import com.example.citizen_report_service.repository.ReportTypeRepository;
@@ -35,15 +36,17 @@ public class ReportServiceImpl implements ReportService {
 
     private final CloudinaryService cloudinaryService;
 
+    private final ReportValidator reportValidator;
+
     @Transactional
     public ReportResponseDto createReport(ReportRequestDto dto, MultipartFile imageFile) {
+        reportValidator.validateCoordinates(dto.getLatitude(), dto.getLongitude());
 
         UploadImageResult imageResult = null;
 
-        if (imageFile == null)
-            throw new VsException(HttpStatus.BAD_REQUEST, ErrorMessage.ERR_UPLOAD_IMAGE_FAIL);
+        if (imageFile != null) {
+            reportValidator.validateImage(imageFile);
 
-        if (!imageFile.isEmpty()) {
             String reportTypeFolder = dto.getReportType();
             String uniqueFilename = UUID.randomUUID().toString();
 
@@ -64,6 +67,8 @@ public class ReportServiceImpl implements ReportService {
 
         ReportType reportType = reportTypeRepository.findByTypeCode(dto.getReportType())
                 .orElseThrow(() -> new VsException(ErrorMessage.ERR_INVALID_REPORT + dto.getReportType()));
+
+        reportValidator.validateTime(dto.getEventStartTime(), dto.getEventEndTime());
 
         Report report = reportMapper.requestToEntity(dto, reportType);
 
