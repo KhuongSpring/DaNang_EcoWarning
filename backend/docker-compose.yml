@@ -141,5 +141,5 @@ networks:
   app-net:
     driver: bridge
 
-volumes: # <-- Thêm khối này
+volumes:
   postgres_data:
