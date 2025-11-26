@@ -10,6 +10,12 @@ public class LogMessage {
 
     // Init Report Type
     public static final String REPORT_TYPE_ALREADY_INITIALIZED = "ReportTypes already initialized. Skipping...";
-    public static final String REPORT_TYPE_INIT_START = "Starting inti report types.";
-    public static final String REPORT_TYPE_INIT_FINISHED = "Finished inti report types.";
+    public static final String REPORT_TYPE_INIT_START = "Starting init report types.";
+    public static final String REPORT_TYPE_INIT_FINISHED = "Finished init report types.";
+
+    // Error Logging in DTO Layer
+    public static final String REPORT_DESCRIPTION_NOT_SAFE = "Report description contain unsafe characters";
+    public static final String REPORT_DESCRIPTION_TOO_LONG = "Report description is over 500 characters";
+
+    public static final String REPORT_TIME_NOT_VALID = "Report time can not in future";
 }
