@@ -18,4 +18,6 @@ public class LogMessage {
     public static final String REPORT_DESCRIPTION_TOO_LONG = "Report description is over 500 characters";
 
     public static final String REPORT_TIME_NOT_VALID = "Report time can not in future";
+
+    public static final String REPORT_TYPE_EMPTY = "Report type is empty";
 }
