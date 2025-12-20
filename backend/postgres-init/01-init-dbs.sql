@@ -1,1 +1,2 @@
 CREATE DATABASE citizen_report_service;
+CREATE DATABASE auth_service;
