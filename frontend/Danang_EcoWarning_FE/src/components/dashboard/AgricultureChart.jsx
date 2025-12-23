@@ -50,8 +50,7 @@ const AgricultureChart = () => {
             : uniqueCategories[0];
           setSelectedCategory(defaultCategory);
         }
-      } catch (error) {
-      }
+      } catch (error) {}
     };
     initialize();
   }, []);
@@ -106,9 +105,9 @@ const AgricultureChart = () => {
             const month = (dateObj.getMonth() + 1).toString().padStart(2, "0");
             const year = dateObj.getFullYear();
             let rawValue = parseFloat(item.value);
-            if (isFaultyTempMetric) rawValue /= 10;
+            if (isFaultyTempMetric) rawValue /= 1;
             if (isRainMetric) rawValue /= 100;
-            if (isSunMetric) rawValue /= 100;
+            if (isSunMetric) rawValue /= 10;
             return {
               value: rawValue,
               timeLabel: `${month}/${year}`,

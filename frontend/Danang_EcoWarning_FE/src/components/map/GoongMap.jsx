@@ -46,7 +46,7 @@ const GoongMap = ({ apiKey, assetType, onMarkerClick, selectedAssetId }) => {
     map.current = new goongSdk.Map({
       container: mapContainer.current,
       style: "https://tiles.goong.io/assets/goong_map_web.json",
-      center: DEFAULT_CENTER, 
+      center: DEFAULT_CENTER,
       zoom: DEFAULT_ZOOM,
     });
     map.current.addControl(new goongSdk.NavigationControl());
@@ -68,19 +68,13 @@ const GoongMap = ({ apiKey, assetType, onMarkerClick, selectedAssetId }) => {
 
     const fetchAndDrawAssets = async () => {
       try {
-
-
         const assets = await getAssetMap(assetType);
 
         if (isCancelled) {
-       
-
           return;
         }
 
         if (!assets || assets.length === 0) {
-         
-
           return;
         }
 
@@ -91,28 +85,26 @@ const GoongMap = ({ apiKey, assetType, onMarkerClick, selectedAssetId }) => {
 
           const lngStr = asset.longitude;
 
-          const newLatStr = `${latStr.substring(0, 2)}.${latStr.substring(2)}`;
+          // const newLatStr = `${latStr.substring(0, 2)}.${latStr.substring(2)}`;
 
-          const newLngStr = `${lngStr.substring(0, 3)}.${lngStr.substring(3)}`;
+          // const newLngStr = `${lngStr.substring(0, 3)}.${lngStr.substring(3)}`;
 
-          const lat = parseFloat(newLatStr);
+          // const lat = parseFloat(newLatStr);
 
-          const lng = parseFloat(newLngStr);
-
-  
+          // const lng = parseFloat(newLngStr);
 
           if (
-            isNaN(lat) ||
-            isNaN(lng) ||
-            lat < -90 ||
-            lat > 90 ||
-            lng < -180 ||
-            lng > 180
+            isNaN(latStr) ||
+            isNaN(lngStr) ||
+            latStr < -90 ||
+            latStr > 90 ||
+            lngStr < -180 ||
+            lngStr > 180
           ) {
             console.warn("Bỏ qua asset có tọa độ không hợp lệ:", asset.name, {
-              lat,
+              latStr,
 
-              lng,
+              lngStr,
             });
 
             return;
@@ -145,7 +137,7 @@ const GoongMap = ({ apiKey, assetType, onMarkerClick, selectedAssetId }) => {
 
           const marker = new goongSdk.Marker(el)
 
-            .setLngLat([lng, lat])
+            .setLngLat([lngStr, latStr])
 
             .addTo(map.current);
 
@@ -161,7 +153,7 @@ const GoongMap = ({ apiKey, assetType, onMarkerClick, selectedAssetId }) => {
             onMarkerClick(asset.id);
 
             map.current.flyTo({
-              center: [lng, lat],
+              center: [lngStr, latStr],
 
               zoom: 15,
             });
@@ -173,15 +165,12 @@ const GoongMap = ({ apiKey, assetType, onMarkerClick, selectedAssetId }) => {
         if (!isCancelled) {
           markersRef.current = newMarkersAndRoots;
         }
-      } catch (error) {
-       
-      }
+      } catch (error) {}
     };
 
     fetchAndDrawAssets();
 
     return () => {
-
       isCancelled = true;
     };
   }, [assetType]);

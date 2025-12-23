@@ -165,7 +165,7 @@ export const getAirPollution = async (lat, lon) => {
   }
 };
 /**
- * 
+ *
  * @param {object} reportData - Dữ liệu báo cáo theo format { request: {...}, image: "..." }
  */
 export const sendDisasterReport = (reportData) => {

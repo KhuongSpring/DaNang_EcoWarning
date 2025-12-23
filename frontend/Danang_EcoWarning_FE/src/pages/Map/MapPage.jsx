@@ -111,7 +111,7 @@ const MapPage = () => {
           apiKey={GOONG_MAP_TILES_KEY}
           assetType={selectedAssetType}
           onMarkerClick={setSelectedAssetId}
-          selectedAssetId={selectedAssetId} // <--- THÊM DÒNG NÀY
+          selectedAssetId={selectedAssetId} 
         />
       </div>
 
