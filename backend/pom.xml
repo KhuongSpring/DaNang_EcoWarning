@@ -5,7 +5,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.example</groupId>
-    <artifactId>twin-digital</artifactId>
+    <artifactId>danang-ecowarning</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
 
@@ -16,5 +16,14 @@
         <module>collector-data-service</module>
         <module>search-service</module>
         <module>citizen-report-service</module>
+        <module>auth-service</module>
     </modules>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+            <version>4.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 </project>
